@@ -1,7 +1,8 @@
 /*
- * File:    allocator_nginx.h
+ * File:    allocator_default.h
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   memory allocater inspired by nginx
+ * Brief:   default allocator using posix's api
+ *
  * Copyright (c) zxsu
  *
  * Licensed under the Academic Free License version 2.1
@@ -24,17 +25,18 @@
 /*
  * History:
  * ================================================================
- * 2013-07-03 11:58 zxsu <suzp1984@gmail.com> created.
+ * 2013-07-07 10:55 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _ALLOCATOR_NGINX_H
-#define _ALLOCATOR_NGINX_H
+#ifndef _ALLOCATOR_DEFAULT_H
+#define _ALLOCATOR_DEFAULT_H
+
 #include "allocator.h"
 
 DECLES_BEGIN
 
-Allocator* allocator_nginx_create(size_t size);
+Allocator* allocator_default_create();
 
 DECLES_END
 
-#endif /* _ALLOCATOR_NGINX_H */
+#endif /* _ALLOCATOR_DEFAULT_H */
