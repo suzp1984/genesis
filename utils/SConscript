@@ -1,0 +1,8 @@
+env = Environment()
+env_flags = env.ParseFlags("-Wall -g -pthread -DDLIST_TEST")
+env.MergeFlags(env_flags)
+
+dlist_src = ['dlist.c', 'locker_nest.c', 'locker_pthread.c']
+
+env.Program('dlist_test', dlist_src)
+
