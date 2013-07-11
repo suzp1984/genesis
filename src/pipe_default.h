@@ -1,5 +1,5 @@
 /*
- * File:    source_primary.h
+ * File:    pipe_default.h
  * Author:  zxsu <suzp1984@gmail.com>
  * Brief:   brief
  *
@@ -25,18 +25,14 @@
 /*
  * History:
  * ================================================================
- * 2013-07-08 16:05 zxsu <suzp1984@gmail.com> created.
+ * 2013-07-11 22:57 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _SOURCE_PRIMARY_H
-#define _SOURCE_PRIMARY_H
+#ifndef _PIPE_DEFAULT_H
+#define _PIPE_DEFAULT_H
 
-#include "source.h"
+#include "pipe.h"
 
-DECLES_BEGIN
+Pipe* pipe_default_create();
 
-Source* source_primary_create(void* userdata);
-
-DECLES_END
-
-#endif /* _SOURCE_PRIMARY_H */
+#endif /* _PIPE_DEFAULT_H */

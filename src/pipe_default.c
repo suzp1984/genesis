@@ -1,5 +1,5 @@
 /*
- * File:    source_primary.h
+ * File:    pipe_default.c
  * Author:  zxsu <suzp1984@gmail.com>
  * Brief:   brief
  *
@@ -25,18 +25,5 @@
 /*
  * History:
  * ================================================================
- * 2013-07-08 16:05 zxsu <suzp1984@gmail.com> created.
+ * 2013-07-11 22:58 zxsu <suzp1984@gmail.com> created.
  */
-
-#ifndef _SOURCE_PRIMARY_H
-#define _SOURCE_PRIMARY_H
-
-#include "source.h"
-
-DECLES_BEGIN
-
-Source* source_primary_create(void* userdata);
-
-DECLES_END
-
-#endif /* _SOURCE_PRIMARY_H */
