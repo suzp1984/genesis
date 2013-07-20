@@ -1,8 +1,11 @@
-env = Environment()
-env_flags = env.ParseFlags("-Wall -g -pthread -DDLIST_TEST")
-env.MergeFlags(env_flags)
+#env = Environment()
+Import('env')
+
+utils_env = env.Clone()
+env_flags = utils_env.ParseFlags("-Wall -g -pthread -DDLIST_TEST")
+utils_env.MergeFlags(env_flags)
 
 dlist_src = ['dlist.c', 'locker_nest.c', 'locker_pthread.c']
 
-env.Program('dlist_test', dlist_src)
+utils_env.Program('dlist_test', dlist_src)
 
