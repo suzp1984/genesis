@@ -1,7 +1,7 @@
 /*
  * File:    source.h
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   brief
+ * Brief:   event source interface
  *
  * Copyright (c) zxsu
  *

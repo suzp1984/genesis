@@ -39,7 +39,7 @@ DECLES_BEGIN
 struct _SourcesManager;
 typedef struct _SourcesManager SourcesManager;
 
-SourcesManager* sources_manager_create(int max_sources);
+SourcesManager* sources_manager_create();
 
 Ret sources_manager_add_source(SourcesManager* thiz, Source* source);
 Ret sources_manager_del_source(SourcesManager* thiz, Source* source);

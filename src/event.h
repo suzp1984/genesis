@@ -45,9 +45,20 @@ typedef enum _EventType
 
 typedef struct _Event
 {
-EventType type;
-
+    EventType type;
 } Event;
+
+typedef Ret (*OnEvent)(void* user_data, Event* event);
+
+static inline Ret event_init(Event* event, EventType type)
+{
+    if (event != NULL) {
+        memset(event, 0x00, sizeof(Event));
+        event->type = type;
+    }
+
+    return RET_OK;
+}
 
 DECLES_END
 

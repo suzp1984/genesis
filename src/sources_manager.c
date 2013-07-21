@@ -29,6 +29,22 @@
  */
 
 #include "sources_manager.h"
+#include "source_primary.h"
+#include "dlist.h"
 
 struct _SourcesManager {
+    int need_refresh;
+    Source* primary;
+    DList* sources_pool;
 };
+
+SourcesManager* sources_manager_create()
+{
+    SourcesManager* thiz = (SourcesManager*)malloc(sizeof(SourcesManager));
+
+    if (thiz != NULL) {
+        Source* primary_source = source_primary_create();
+    }
+
+    return thiz;
+}

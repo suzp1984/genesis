@@ -50,6 +50,8 @@ struct _Pipe {
     PipeGetReadFd get_read_fd;
     PipeGetWriteFd get_write_fd;
     PipeDestroy destroy;
+
+    char priv[1];
 };
 
 static inline int pipe_read(Pipe* thiz, void* buf, size_t length)

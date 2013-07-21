@@ -32,10 +32,13 @@
 #define _SOURCE_PRIMARY_H
 
 #include "source.h"
+#include "event.h"
 
 DECLES_BEGIN
 
-Source* source_primary_create(void* userdata);
+Source* source_primary_create(OnEvent on_event, void* userdata);
+
+Ret source_queue_event(Source* thiz, Event* event);
 
 DECLES_END
 
