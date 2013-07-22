@@ -4,7 +4,7 @@
 
 #include "typedef.h"
 
-DECLS_BEGIN
+DECLES_BEGIN
 
 struct  _Allocator;
 typedef struct  _Allocator Allocator;
@@ -63,7 +63,7 @@ static inline void  allocator_destroy(Allocator* thiz)
 	return thiz->destroy(thiz);
 }
 
-DECLS_END
+DECLES_END
 
 #endif/*ALLOCATOR_H*/
 

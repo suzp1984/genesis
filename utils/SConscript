@@ -1,11 +1,20 @@
 #env = Environment()
 Import('env')
 
-utils_env = env.Clone()
-env_flags = utils_env.ParseFlags("-Wall -g -pthread -DDLIST_TEST")
-utils_env.MergeFlags(env_flags)
+# utils_env = env.Clone()
+# env_flags = utils_env.ParseFlags("-Wall -g -pthread -DDLIST_TEST")
+# utils_env.MergeFlags(env_flags)
 
-dlist_src = ['dlist.c', 'locker_nest.c', 'locker_pthread.c']
+# dlist_src = ['dlist.c', 'locker_nest.c', 'locker_pthread.c']
 
-utils_env.Program('dlist_test', dlist_src)
+# utils_env.Program('dlist_test', dlist_src)
 
+utils_lib_sources = ['allocator_nginx.c', 'locker_pthread.c',
+                     'dlist.c', 'allocator_default.c',
+                     'locker_nest.c']
+print utils_lib_sources
+
+utils_lib_env = env.Clone()
+utils_lib = utils_lib_env.Library('genesis_utils', utils_lib_sources)
+
+Return('utils_lib')

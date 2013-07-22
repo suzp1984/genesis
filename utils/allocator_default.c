@@ -30,6 +30,8 @@
 
 #include <stdlib.h>
 
+#include "allocator_default.h"
+
 static void* allocator_default_calloc(Allocator* thiz, size_t nmemb, size_t size)
 {
     return calloc(nmemb, size);

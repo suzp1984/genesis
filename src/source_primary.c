@@ -1,7 +1,7 @@
 /*
- * File:    test_allocator.cpp
+ * File:    source_primary.c
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   brief
+ * Brief:   primary source implementation
  *
  * Copyright (c) zxsu
  *
@@ -25,43 +25,12 @@
 /*
  * History:
  * ================================================================
- * 2013-07-09 11:21 zxsu <suzp1984@gmail.com> created.
+ * 2013-07-22 00:39 zxsu <suzp1984@gmail.com> created.
  */
 
-#include <gtest/gtest.h>
+#include "source_primary.h"
 
-#include "allocator_nginx.h"
-
-namespace {
-
-    class AllocatorNgnixTest : public ::testing::Test {
-    protected:
-        AllocatorNgnixTest() {
-            p1 = NULL;
-        }
-
-        virtual ~AllocatorNgnixTest() {
-        }
-
-        virtual void SetUp() {
-            allocator_nginx_512 = allocator_nginx_create(512);
-        }
-
-        virtual void TearDown() {
-            allocator_destroy(allocator_nginx_512);
-        }
-
-        Allocator* allocator_nginx_512;
-        void* p1;
-    }; // AllocatorNgnixTest
-
-    TEST_F(AllocatorNgnixTest, alloc) {
-        p1 = allocator_alloc(allocator_nginx_512, 416);
-        //EXPECT_NE(p1, NULL);
-    }
-
-    TEST_F(AllocatorNgnixTest, free) {
-        allocator_free(allocator_nginx_512, p1);
-    }
-
-} // namespace 
+typedef struct {
+    OnEvent on_event;
+    void* user_data;
+} PrivInfo;

@@ -1,2 +1,13 @@
-env = Environment()
-env.ParseConfig("pkg-config 
+Import('env')
+
+test_env = env.Clone()
+
+test_env.Append(CCFLAGS = Split('-Wall -g -lgtest -lgtest_main -lpthread -lgenesis_utils'),
+                CPPPATH = ['#utils', '#src'],
+                LIBPATH = ['utils', 'src'])
+## LIBS = ['genesis_utils', 'gtest_main', 'pthread', 'gtest']
+print test_env['LIBPATH']
+print test_env['CPPPATH']
+#print test_env['LIBS']
+
+test_env.Program('test_allocator', ['test_allocator.cpp'])
