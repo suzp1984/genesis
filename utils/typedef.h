@@ -18,6 +18,8 @@ typedef int      (*DataCompareFunc)(void* ctx, void* data);
 typedef Ret      (*DataVisitFunc)(void* ctx, void* data);
 typedef int       (*DataHashFunc)(void* data);
 
+typedef Ret (*SortFunc)(void** array, size_t nr, DataCompareFunc cmp);
+
 #define return_if_fail(p) if(!(p)) \
 	    {printf("%s:%d Warning: "#p" failed.\n", \
 	    		        __func__, __LINE__); return;}
