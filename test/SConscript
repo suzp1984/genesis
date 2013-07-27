@@ -10,9 +10,6 @@ test_env.Append(CCFLAGS = Split('-fpermissive -Wint-to-pointer-cast'))
 #                 CPPPATH = ['#utils', '#src'],
 #                 LIBPATH = ['utils', 'src'])
 ## LIBS = ['genesis_utils', 'gtest_main', 'pthread', 'gtest']
-#print test_env['LIBPATH']
-#print test_env['CPPPATH']
-#print test_env['LIBS']
 
 test_env.Program('test_allocator', ['test_allocator.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])
@@ -24,4 +21,7 @@ test_env.Program('test_darray', ['test_darray.cpp'], LIBS=[utils_lib_static, 'gt
                  CPPPATH = ['#utils', '#src'])
 
 test_env.Program('test_pipe', ['test_pipe.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
+                 CPPPATH = ['#utils', '#src'])
+
+test_env.Program('test_source', ['test_source.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])
