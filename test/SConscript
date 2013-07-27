@@ -17,3 +17,6 @@ test_env.Program('test_allocator', ['test_allocator.cpp'], LIBS=[utils_lib, 'gte
 
 test_env.Program('test_dlist', ['test_dlist.cpp'], LIBS=[utils_lib, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])
+
+test_env.Program('test_darray', ['test_darray.cpp'], LIBS=[utils_lib, 'gtest', 'gtest_main', 'pthread'],
+                 CPPPATH = ['#utils', '#src'])
