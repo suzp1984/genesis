@@ -1,5 +1,6 @@
 Import('env')
-Import('utils_lib')
+# Import('utils_lib')
+Import('utils_lib_static')
 
 test_env = env.Clone()
 
@@ -12,11 +13,11 @@ test_env.Append(CCFLAGS = Split('-fpermissive -Wint-to-pointer-cast'))
 #print test_env['CPPPATH']
 #print test_env['LIBS']
 
-test_env.Program('test_allocator', ['test_allocator.cpp'], LIBS=[utils_lib, 'gtest', 'gtest_main', 'pthread'],
+test_env.Program('test_allocator', ['test_allocator.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])
 
-test_env.Program('test_dlist', ['test_dlist.cpp'], LIBS=[utils_lib, 'gtest', 'gtest_main', 'pthread'],
+test_env.Program('test_dlist', ['test_dlist.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])
 
-test_env.Program('test_darray', ['test_darray.cpp'], LIBS=[utils_lib, 'gtest', 'gtest_main', 'pthread'],
+test_env.Program('test_darray', ['test_darray.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])

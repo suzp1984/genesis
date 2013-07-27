@@ -4,9 +4,16 @@ utils_lib_sources = ['allocator_nginx.c', 'locker_pthread.c',
                      'dlist.c', 'allocator_default.c',
                      'locker_nest.c', 'darray.c', 'linear_container_darray.c', 'linear_container_dlist.c',
                      'hash_table.c', 'stack.c', 'queue.c']
-print utils_lib_sources
+#print utils_lib_sources
 
 utils_lib_env = env.Clone()
-utils_lib = utils_lib_env.Library('genesis_utils', utils_lib_sources)
+utils_lib_static = utils_lib_env.StaticLibrary('genesis_utils', utils_lib_sources)
+
+utils_lib_shared = utils_lib_env.SharedLibrary('genesis_utils', utils_lib_sources)
+
+utils_lib = [utils_lib_static, utils_lib_shared]
+
+Export('utils_lib_static')
+Export('utils_lib_shared')
 
 Return('utils_lib')
