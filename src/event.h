@@ -46,6 +46,12 @@ typedef enum _EventType
 typedef struct _Event
 {
     EventType type;
+//    size_t time;
+    union
+    {
+        void* extra;
+    }u;
+
 } Event;
 
 typedef Ret (*OnEvent)(void* user_data, Event* event);
