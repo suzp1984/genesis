@@ -1,5 +1,5 @@
 /*
- * File:    pipe_default.h
+ * File:    test_pipe.cpp
  * Author:  zxsu <suzp1984@gmail.com>
  * Brief:   brief
  *
@@ -25,18 +25,21 @@
 /*
  * History:
  * ================================================================
- * 2013-07-11 22:57 zxsu <suzp1984@gmail.com> created.
+ * 2013-07-27 16:56 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _PIPE_DEFAULT_H
-#define _PIPE_DEFAULT_H
+#include <gtest/gtest.h>
+#include <string.h>
 
-#include "pipe.h"
+#include "pipe_default.h"
 
-DECLES_BEGIN
+TEST(PipeDefaultTest, test1) {
+    char buf[4] = {0};
+    Pipe* pipe = pipe_default_create();
 
-Pipe* pipe_default_create();
+    ASSERT_EQ(4, pipe_write(pipe, "abc", 4));
+    ASSERT_EQ(4, pipe_read(pipe, buf, 4));
+    ASSERT_EQ(0, strncmp("abc", buf, 4));
 
-DECLES_END
-
-#endif /* _PIPE_DEFAULT_H */
+    pipe_destroy(pipe);
+}

@@ -34,3 +34,11 @@ typedef struct {
     OnEvent on_event;
     void* user_data;
 } PrivInfo;
+
+Source* source_primary_create(OnEvent on_event, void* userdata)
+{
+}
+
+Ret source_queue_event(Source* thiz, Event* event)
+{
+}

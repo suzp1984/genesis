@@ -1,6 +1,7 @@
 Import('env')
 # Import('utils_lib')
 Import('utils_lib_static')
+Import('genesis_lib_static')
 
 test_env = env.Clone()
 
@@ -20,4 +21,7 @@ test_env.Program('test_dlist', ['test_dlist.cpp'], LIBS=[utils_lib_static, 'gtes
                  CPPPATH = ['#utils', '#src'])
 
 test_env.Program('test_darray', ['test_darray.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
+                 CPPPATH = ['#utils', '#src'])
+
+test_env.Program('test_pipe', ['test_pipe.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])
