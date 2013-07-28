@@ -30,6 +30,9 @@
 
 #include <sys/select.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "main_loop_select.h"
 //#include "source_primay
@@ -43,22 +46,124 @@ typedef struct _PrivInfo {
 
 static Ret main_loop_select_run(MainLoop* thiz)
 {
+    DECLES_PRIV(priv, thiz);
+
+    int i = 0;
+    int n = 0;
+    int fd = -1;
+    int mfd = -1;
+    int wait_time = 3600 * 3000;
+    int source_wait_time = 0;
+    int ret = 0;
+    struct timeval tv = {0};
+    Source* source = NULL;
+
+    priv->running = 1;
+    while(priv->running) {
+        FD_ZERO(&(priv->fdset));
+        FD_ZERO(&(priv->err_fdset));
+
+        for (i = 0; i < sources_manager_get_count(priv->sources_manager); i++) {
+            source = sources_manager_get(priv->sources_manager, i);
+            if ((fd = source_get_fd(source)) >= 0) {
+                FD_SET(fd, &(priv->fdset));
+                FD_SET(fd, &(priv->err_fdset));
+                if (fd > mfd) mfd = fd;
+                ++n;
+            }
+
+            source_wait_time = source_check(source);
+            if (source_wait_time >= 0 && source_wait_time < wait_time) {
+                wait_time = source_wait_time;
+            }
+        }
+
+        tv.tv_sec = wait_time / 1000;
+        tv.tv_usec = (wait_time % 1000)*1000;
+
+        ret = select(mfd + 1, &(priv->fdset), NULL, &(priv->err_fdset), &tv);
+
+        for (i = 0; i < sources_manager_get_count(priv->sources_manager); ) {
+            if (sources_manager_need_refresh(priv->sources_manager)) {
+                break;
+            }
+            source = sources_manager_get(priv->sources_manager, i);
+
+            if (source->disable > 0) {
+                sources_manager_del_source(priv->sources_manager, source);
+                continue;
+            }
+
+            if ((fd = source_get_fd(source)) >= 0 && ret != 0) {
+                if (ret > 0 && FD_ISSET(fd, &(priv->fdset))) {
+                    if (source_dispatch(source) != RET_OK) {
+                        sources_manager_del_source(priv->sources_manager, source);
+                    } else {
+                        ++i;
+                    }
+                    continue;
+                }
+            } else if (FD_ISSET(fd, &(priv->fdset))) {
+                sources_manager_del_source(priv->sources_manager, source);
+                continue;
+            }
+
+            if ((source_wait_time = source_check(source)) == 0) {
+                if (source_dispatch(source) != RET_OK) {
+                    sources_manager_del_source(priv->sources_manager, source);
+                } else {
+                    ++i;
+                }
+                continue;
+            }
+
+            ++i;
+        }
+    }
+
+    return RET_OK;
 }
 
 static Ret main_loop_select_quit(MainLoop* thiz)
 {
+    DECLES_PRIV(priv, thiz);
+
+    priv->running = 0;
+    return RET_OK;
 }
 
 static Ret main_loop_select_add_source(MainLoop* thiz, Source* source)
 {
+    DECLES_PRIV(priv, thiz);
+    Event event;
+
+    event_init(&event, EVT_ADD_SOURCE);
+    event.u.extra = source;
+
+    source->active = 1;
+    source_enable(source);
+
+    return source_queue_event(sources_manager_get_primary_source(priv->sources_manager),
+                              &event);
 }
 
 static Ret main_loop_select_remove_source(MainLoop* thiz, Source* source)
 {
+    DECLES_PRIV(priv, thiz);
+    Event event;
+
+    event_init(&event, EVT_REMOVE_SOURCE);
+    event.u.extra = source;
+
+    source_disable(source);
+
+    return source_queue_event(sources_manager_get_primary_source(priv->sources_manager),
+                              &event);
 }
 
 static void main_loop_select_destroy(MainLoop* thiz)
 {
+    SAFE_FREE(thiz);
 }
 
 MainLoop* main_loop_select_create(SourcesManager* sources_manager)
@@ -77,6 +182,9 @@ MainLoop* main_loop_select_create(SourcesManager* sources_manager)
         thiz->destroy = main_loop_select_destroy;
 
         priv->sources_manager = sources_manager;
+        FD_ZERO(&(priv->fd_set));
+        FD_ZERO(&(priv->err_fdset));
+        priv->running = 0;
     }
 
     return thiz;

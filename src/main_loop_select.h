@@ -34,6 +34,10 @@
 #include "main_loop.h"
 #include "sources_manager.h"
 
+DECLES_BEGIN
+
 MainLoop* main_loop_select_create(SourcesManager* sources_manager);
+
+DECLES_END
 
 #endif /* _MAIN_LOOP_SELECT_H */
