@@ -180,6 +180,7 @@ void sources_manager_destroy(SourcesManager* thiz)
         }
 
         source_unref(thiz->primary);
+        dlist_destroy(thiz->sources_pool);
     }
 
     SAFE_FREE(thiz);
