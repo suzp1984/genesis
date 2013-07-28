@@ -41,6 +41,8 @@ struct _SourcesManager {
 };
 
 static Ret sources_manager_on_event(void* user_data, Event* event);
+static int sources_cmp(void* ctx, void* data);
+static void sources_node_destroy(void* ctx, void* data);
 
 static Ret sources_manager_on_event(void* user_data, Event* event)
 {
@@ -66,12 +68,22 @@ static Ret sources_manager_on_event(void* user_data, Event* event)
     return RET_OK;
 }
 
+static void sources_node_destroy(void* ctx, void* data)
+{
+    return_if_fail(data != NULL);
+
+    Source* source = (Source*)data;
+    source_unref(source);
+
+    return;
+}
+
 SourcesManager* sources_manager_create()
 {
     SourcesManager* thiz = (SourcesManager*)malloc(sizeof(SourcesManager));
 
     if (thiz != NULL) {
-        thiz->sources_pool = dlist_create(NULL, NULL, NULL);
+        thiz->sources_pool = dlist_create(sources_node_destroy, NULL, NULL);
         Source* primary_source = source_primary_create(sources_manager_on_event, (void*)thiz);
         thiz->primary = primary_source;
         dlist_append(thiz->sources_pool, (void*)primary_source);
@@ -90,11 +102,43 @@ Ret sources_manager_add_source(SourcesManager* thiz, Source* source)
     return dlist_append(thiz->sources_pool, (void*)source);
 }
 
-Ret sources_manager_del_source(SourcesManager* thiz, Source* source);
+static int sources_cmp(void* ctx, void* data)
+{
+    return (ctx == data) ? 0 : -1;
+}
 
-int sources_manager_get_count(SourcesManager* thiz);
+Ret sources_manager_del_source(SourcesManager* thiz, Source* source)
+{
+    return_val_if_fail(thiz != NULL && source != NULL, RET_INVALID_PARAMS);
+
+    int index = 0;
+    int ret = RET_INVALID_PARAMS;
+
+    index = dlist_find(thiz->sources_pool, sources_cmp, source);
+    if (index >= 0) {
+        ret = dlist_delete(thiz->sources_pool, index);
+        //source_unref(source);
+        sources_manager_set_need_refresh(thiz);
+    }
+
+    return ret;
+}
+
+int sources_manager_get_count(SourcesManager* thiz)
+{
+    return_val_if_fail(thiz != NULL, 0);
+
+    return dlist_length(thiz->sources_pool);
+}
+
 Source* sources_manager_get(SourcesManager* thiz, int i)
 {
+    return_val_if_fail(thiz != NULL && i >= 0, NULL);
+
+    Source* source = NULL;
+    dlist_get_by_index(thiz->sources_pool, i, (void**)&source);
+
+    return source;
 }
 
 int sources_manager_need_refresh(SourcesManager* thiz)
@@ -127,4 +171,17 @@ Source* sources_manager_get_primary_source(SourcesManager* thiz)
 
 void sources_manager_destroy(SourcesManager* thiz)
 {
+    int i = 0;
+    int count = 0;
+    if (thiz != NULL) {
+        count = sources_manager_get_count(thiz);
+        for (i = 0; i < count; i++) {
+            dlist_delete(thiz->sources_pool, 0);
+        }
+
+        source_unref(thiz->primary);
+    }
+
+    SAFE_FREE(thiz);
+    return;
 }

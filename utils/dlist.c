@@ -344,6 +344,7 @@ Ret dlist_foreach(DList* thiz, DListDataVisitFunc visit, void* ctx)
 	return ret;
 }
 
+// what about do not find the node. return -1 or ...
 int      dlist_find(DList* thiz, DListDataCompareFunc cmp, void* ctx)
 {
 	int i = 0;
@@ -366,7 +367,7 @@ int      dlist_find(DList* thiz, DListDataCompareFunc cmp, void* ctx)
 
 	dlist_unlock(thiz);
 
-	return i;
+	return (iter == NULL) ? -1 : i;
 }
 
 void dlist_destroy(DList* thiz)

@@ -7,6 +7,7 @@ utils_lib_sources = ['allocator_nginx.c', 'locker_pthread.c',
 #print utils_lib_sources
 
 utils_lib_env = env.Clone()
+utils_lib_env.Append(CCFLAGS = Split('-fPIC'))
 utils_lib_static = utils_lib_env.StaticLibrary('genesis_utils', utils_lib_sources)
 
 utils_lib_shared = utils_lib_env.SharedLibrary('genesis_utils', utils_lib_sources)
