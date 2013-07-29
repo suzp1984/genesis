@@ -35,6 +35,7 @@
 #include <unistd.h>
 
 #include "main_loop_select.h"
+#include "event.h"
 //#include "source_primay
 
 typedef struct _PrivInfo {
@@ -182,7 +183,7 @@ MainLoop* main_loop_select_create(SourcesManager* sources_manager)
         thiz->destroy = main_loop_select_destroy;
 
         priv->sources_manager = sources_manager;
-        FD_ZERO(&(priv->fd_set));
+        FD_ZERO(&(priv->fdset));
         FD_ZERO(&(priv->err_fdset));
         priv->running = 0;
     }

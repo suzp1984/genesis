@@ -28,3 +28,6 @@ test_env.Program('test_source', ['test_source.cpp'], LIBS=[genesis_lib_static, u
 
 test_env.Program('test_sources_manager', ['test_sources_manager.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src'])
+
+test_env.Program('test_main_loop', ['test_main_loop.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
+                 CPPPATH = ['#utils', '#src'])
