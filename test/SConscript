@@ -12,22 +12,22 @@ test_env.Append(CCFLAGS = Split('-fpermissive -Wint-to-pointer-cast'))
 ## LIBS = ['genesis_utils', 'gtest_main', 'pthread', 'gtest']
 
 test_env.Program('test_allocator', ['test_allocator.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
-                 CPPPATH = ['#utils', '#src'])
+                 CPPPATH = ['#utils', '#src/core'])
 
 test_env.Program('test_dlist', ['test_dlist.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
-                 CPPPATH = ['#utils', '#src'])
+                 CPPPATH = ['#utils', '#src/core'])
 
 test_env.Program('test_darray', ['test_darray.cpp'], LIBS=[utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
-                 CPPPATH = ['#utils', '#src'])
+                 CPPPATH = ['#utils', '#src/core'])
 
 test_env.Program('test_pipe', ['test_pipe.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
-                 CPPPATH = ['#utils', '#src'])
+                 CPPPATH = ['#utils', '#src/core'])
 
 test_env.Program('test_source', ['test_source.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
-                 CPPPATH = ['#utils', '#src'])
+                 CPPPATH = ['#utils', '#src/core'])
 
 test_env.Program('test_sources_manager', ['test_sources_manager.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
-                 CPPPATH = ['#utils', '#src'])
+                 CPPPATH = ['#utils', '#src/core'])
 
 test_env.Program('test_main_loop', ['test_main_loop.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
-                 CPPPATH = ['#utils', '#src'])
+                 CPPPATH = ['#utils', '#src/core'])
