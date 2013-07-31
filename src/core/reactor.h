@@ -1,7 +1,7 @@
 /*
- * File:    source_timer.h
+ * File:    reactor.h
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   timer source header file
+ * Brief:   reactor header file
  *
  * Copyright (c) zxsu
  *
@@ -25,23 +25,29 @@
 /*
  * History:
  * ================================================================
- * 2013-07-08 10:26 zxsu <suzp1984@gmail.com> created.
+ * 2013-07-31 22:10 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _SOURCE_TIMER_H
-#define _SOURCE_TIMER_H
+#ifndef _REACTOR_H
+#define _REACTOR_H
 
-#include "source.h"
+#include "typedef.h"
 
 DECLES_BEGIN
 
-typedef Ret (*TimerAction)(void* user_data);
+typedef Ret (*TimerHandler)(void* ctx);
 
-Source* source_timer_create(int interval, TimerAction action, void* user_data);
+struct _Reactor;
+typedef struct _Reactor Reactor;
 
-Ret source_timer_reset(Source* thiz);
-Ret source_timer_modify(Source* thiz, int interval);
+Reactor* reactor_create(const char* conf_file);
+
+Ret reactor_call_later(Reactor* thiz, int interval, TimerHandler handler, void* ctx);
+Ret reactor_run(Reactor* thiz);
+Ret reactor_stop(Reactor* thiz);
+
+void reactor_destroy(Reactor* thiz);
 
 DECLES_END
 
-#endif /* _SOURCE_TIMER_H */
+#endif /* _REACTOR_H */

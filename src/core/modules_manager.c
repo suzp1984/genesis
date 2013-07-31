@@ -1,7 +1,7 @@
 /*
- * File:    source_timer.h
+ * File:    modules_manager.c
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   timer source header file
+ * Brief:   ModulesManager code
  *
  * Copyright (c) zxsu
  *
@@ -25,23 +25,17 @@
 /*
  * History:
  * ================================================================
- * 2013-07-08 10:26 zxsu <suzp1984@gmail.com> created.
+ * 2013-07-31 22:51 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _SOURCE_TIMER_H
-#define _SOURCE_TIMER_H
+#include "modules_manager.h"
+#include "module.h"
+#include "dlist.h"
 
-#include "source.h"
+struct _ModulesManager {
+    DList* modules;
+};
 
-DECLES_BEGIN
-
-typedef Ret (*TimerAction)(void* user_data);
-
-Source* source_timer_create(int interval, TimerAction action, void* user_data);
-
-Ret source_timer_reset(Source* thiz);
-Ret source_timer_modify(Source* thiz, int interval);
-
-DECLES_END
-
-#endif /* _SOURCE_TIMER_H */
+ModulesManager* modules_manager_create()
+{
+}
