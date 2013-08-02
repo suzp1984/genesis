@@ -3,6 +3,7 @@
 #define ALLOCATOR_H
 
 #include "typedef.h"
+#include "stdlib.h"
 
 DECLES_BEGIN
 
@@ -28,32 +29,48 @@ struct _Allocator
 
 static inline void* allocator_calloc(Allocator* thiz, size_t nmemb, size_t size)
 {
-	return_val_if_fail(thiz != NULL && thiz->calloc != NULL, NULL);
+    return_val_if_fail(nmemb > 0 && size > 0, NULL);
 
-	return thiz->calloc(thiz, nmemb, size);
+    if (thiz != NULL && thiz->calloc != NULL) {
+        return thiz->calloc(thiz, nmemb, size);
+    } else {
+        return calloc(nmemb, size);
+    }
 }
 
 static inline void* allocator_alloc(Allocator* thiz, size_t size)
 {
-	return_val_if_fail(thiz != NULL && thiz->alloc != NULL, NULL);
+    return_val_if_fail(size > 0, NULL);
 
-	return thiz->alloc(thiz, size);
+    if (thiz != NULL && thiz->alloc != NULL) {
+        return thiz->alloc(thiz, size);
+    } else {
+        return malloc(size);
+    }
 }
 
 static inline void  allocator_free(Allocator* thiz, void *ptr)
 {
-	return_if_fail(thiz != NULL && thiz->free != NULL);
+	return_if_fail(ptr != NULL);
 
-	thiz->free(thiz, ptr);
-
+    if (thiz != NULL && thiz->free != NULL) {
+        thiz->free(thiz, ptr);
+    } else {
+        free(ptr);
+    }
+    
 	return;
 }
 
 static inline void* allocator_realloc(Allocator* thiz, void *ptr, size_t size)
 {
-	return_val_if_fail(thiz != NULL && thiz->realloc != NULL, NULL);
+	return_val_if_fail(ptr != NULL && size > 0, NULL);
 
-	return thiz->realloc(thiz, ptr, size);
+    if (thiz != NULL && thiz->realloc != NULL) {
+        return thiz->realloc(thiz, ptr, size);
+    } else {
+        return realloc(ptr, size);
+    }
 }
 
 static inline void  allocator_destroy(Allocator* thiz)

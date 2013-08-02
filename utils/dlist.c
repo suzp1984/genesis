@@ -28,7 +28,7 @@
  * 2008-11-24 Li XianJing <xianjimli@hotmail.com> created
  * 2008-12-08 Li XianJing <xianjimli@hotmail.com> add autotest.
  * 2008-12-10 Li XianJing <xianjimli@hotmail.com> add lock support.
- *
+ * 2013-08-02 zxsu <suzp1984@gmail.com> add memory management
  */
 
 #include <stdlib.h>
@@ -48,6 +48,7 @@ struct _DList
 	DListNode* first;
 	void* data_destroy_ctx;
 	DListDataDestroyFunc data_destroy;
+    Allocator* alloc;
 };
 
 static void dlist_destroy_data(DList* thiz, void* data)
@@ -62,7 +63,7 @@ static void dlist_destroy_data(DList* thiz, void* data)
 
 static DListNode* dlist_create_node(DList* thiz, void* data)
 {
-	DListNode* node = malloc(sizeof(DListNode));
+	DListNode* node = allocator_alloc(thiz->alloc, sizeof(DListNode));
 
 	if(node != NULL)
 	{
@@ -81,7 +82,8 @@ static void dlist_destroy_node(DList* thiz, DListNode* node)
 		node->next = NULL;
 		node->prev = NULL;
 		dlist_destroy_data(thiz, node->data);
-		SAFE_FREE(node);
+
+        allocator_free(thiz->alloc, node);
 	}
 
 	return;
@@ -118,9 +120,9 @@ static void dlist_destroy_locker(DList* thiz)
 	return;
 }
 
-DList* dlist_create(DListDataDestroyFunc data_destroy, void* ctx, Locker* locker)
+DList* dlist_create(DListDataDestroyFunc data_destroy, void* ctx, Locker* locker, Allocator* alloc)
 {
-	DList* thiz = malloc(sizeof(DList));
+	DList* thiz = allocator_alloc(alloc, sizeof(DList));
 
 	if(thiz != NULL)
 	{
@@ -128,6 +130,7 @@ DList* dlist_create(DListDataDestroyFunc data_destroy, void* ctx, Locker* locker
 		thiz->locker = locker;
 		thiz->data_destroy = data_destroy;
 		thiz->data_destroy_ctx = ctx;
+        thiz->alloc = alloc;
 	}
 
 	return thiz;
@@ -390,7 +393,7 @@ void dlist_destroy(DList* thiz)
 	thiz->first = NULL;
 	dlist_destroy_locker(thiz);
 	
-	SAFE_FREE(thiz);
+    allocator_free(thiz->alloc, thiz);
 
 	return;
 }

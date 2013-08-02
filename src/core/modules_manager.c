@@ -34,8 +34,18 @@
 
 struct _ModulesManager {
     DList* modules;
+    Allocator* alloc;
 };
 
-ModulesManager* modules_manager_create()
+ModulesManager* modules_manager_create(Allocator* alloc)
 {
+    return_val_if_fail(alloc != NULL, NULL);
+
+    ModulesManager* thiz = (ModulesManager*)allocator_alloc(alloc, sizeof(ModulesManager));
+
+    if (thiz != NULL) {
+        thiz->alloc = alloc;
+    }
+
+    return thiz;
 }

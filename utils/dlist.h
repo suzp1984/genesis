@@ -32,6 +32,7 @@
 
 #include <stdio.h>
 #include "locker.h"
+#include "allocator.h"
 
 #ifndef DLIST_H
 #define DLIST_H
@@ -45,7 +46,7 @@ typedef void     (*DListDataDestroyFunc)(void* ctx, void* data);
 typedef int      (*DListDataCompareFunc)(void* ctx, void* data);
 typedef Ret      (*DListDataVisitFunc)(void* ctx, void* data);
 
-DList* dlist_create(DListDataDestroyFunc data_destroy, void* ctx, Locker* locker);
+DList* dlist_create(DListDataDestroyFunc data_destroy, void* ctx, Locker* locker, Allocator* alloc);
 
 Ret dlist_insert(DList* thiz, size_t index, void* data);
 Ret dlist_prepend(DList* thiz, void* data);

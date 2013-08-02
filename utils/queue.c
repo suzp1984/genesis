@@ -42,7 +42,7 @@ Queue* queue_create(DataDestroyFunc data_destroy, void* ctx)
 
 	if(thiz != NULL)
 	{
-		if((thiz->dlist = dlist_create(data_destroy, ctx, NULL)) == NULL)
+		if((thiz->dlist = dlist_create(data_destroy, ctx, NULL, NULL)) == NULL)
 		{
 			free(thiz);
 			thiz = NULL;

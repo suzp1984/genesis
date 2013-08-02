@@ -32,11 +32,12 @@
 #define _MODULES_MANAGER_H
 
 #include "typedef.h"
+#include "allocator.h"
 
 struct _ModulesManager;
 typedef struct _ModulesManager ModulesManager;
 
-ModulesManager* modules_manager_create();
+ModulesManager* modules_manager_create(Allocator* alloc);
 
 Ret modules_manager_load(ModulesManager* thiz, const char* module);
 Ret modules_manager_unload(ModulesManager* thiz, const char* module);

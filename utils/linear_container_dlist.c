@@ -86,7 +86,7 @@ LinearContainer* linear_container_dlist_create(DataDestroyFunc data_destroy, voi
 	if(thiz != NULL)
 	{
 		PrivInfo* priv = (PrivInfo*)thiz->priv;
-		priv->dlist = dlist_create(data_destroy, ctx, NULL);
+		priv->dlist = dlist_create(data_destroy, ctx, NULL, NULL);
 
 		thiz->insert        =  linear_container_dlist_insert;
 		thiz->prepend       =  linear_container_dlist_prepend;

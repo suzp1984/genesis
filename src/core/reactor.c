@@ -32,3 +32,9 @@
 
 #include "main_loop.h"
 #include "module.h"
+
+
+struct _Reactor {
+    ModulesManager* modules_manager;
+    MainLoop* main_loop;
+};

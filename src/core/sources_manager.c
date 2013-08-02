@@ -83,7 +83,7 @@ SourcesManager* sources_manager_create()
     SourcesManager* thiz = (SourcesManager*)malloc(sizeof(SourcesManager));
 
     if (thiz != NULL) {
-        thiz->sources_pool = dlist_create(sources_node_destroy, NULL, NULL);
+        thiz->sources_pool = dlist_create(sources_node_destroy, NULL, NULL, NULL);
         Source* primary_source = source_primary_create(sources_manager_on_event, (void*)thiz);
         thiz->primary = primary_source;
         dlist_append(thiz->sources_pool, (void*)primary_source);

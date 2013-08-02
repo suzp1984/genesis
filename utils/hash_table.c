@@ -73,7 +73,7 @@ Ret      hash_table_insert(HashTable* thiz, void* data)
 	index = thiz->hash(data)%thiz->slot_nr;
 	if(thiz->slots[index] == NULL)
 	{
-		thiz->slots[index] = dlist_create(thiz->data_destroy, thiz->data_destroy_ctx, NULL);
+		thiz->slots[index] = dlist_create(thiz->data_destroy, thiz->data_destroy_ctx, NULL, NULL);
 	}
 
 	return dlist_prepend(thiz->slots[index], data);

@@ -43,7 +43,7 @@ namespace {
         }
 
         virtual void SetUp() {
-            dlist = dlist_create(NULL, NULL, NULL);
+            dlist = dlist_create(NULL, NULL, NULL, NULL);
         }
 
         virtual void TearDown() {
