@@ -63,7 +63,7 @@ Ret modules_manager_load(ModulesManager* thiz, const char* module, void* ctx)
     return_val_if_fail(thiz != NULL && module != NULL, RET_INVALID_PARAMS);
 
     Ret ret = RET_FAIL;
-    Module* item = module_create(module, NULL, NULL, ctx);
+    Module* item = module_create(module, NULL, NULL, thiz->alloc, ctx);
     if (item != NULL) {
         dlist_append(thiz->modules, (void*)item);
     }

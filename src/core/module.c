@@ -48,6 +48,7 @@ struct _Module
     void* ctx;
     void* handler;
     char* lib_path;
+    Allocator* alloc;
 };
 
 static Ret module__load(Module* thiz, const char* name)
@@ -89,15 +90,16 @@ static Ret module__load(Module* thiz, const char* name)
     return RET_OK;
 }
 
-Module* module_create(const char* name, const char* arguments, const char* lib_path, void* ctx)
+Module* module_create(const char* name, const char* arguments, const char* lib_path, Allocator* alloc, void* ctx)
 {
     return_val_if_fail(name != NULL, NULL);
 
-    Module* thiz = (Module*)malloc(sizeof(Module));
+    Module* thiz = (Module*)allocator_alloc(alloc, sizeof(Module));
 
     if (thiz != NULL) {
         thiz->ctx = ctx;
         thiz->name = strdup(name);
+        thiz->alloc = alloc;
         if (lib_path == NULL) {
             lib_path = MODULE_PATH;
         }
@@ -179,5 +181,6 @@ void module_destroy(Module* thiz)
     SAFE_FREE(thiz->name);
     SAFE_FREE(thiz->lib_path);    
     SAFE_FREE(thiz->argument);
-    SAFE_FREE(thiz);
+
+    allocator_free(thiz->alloc, thiz);
 }

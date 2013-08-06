@@ -32,13 +32,14 @@
 #define _MODULE_H
 
 #include "typedef.h"
+#include "allocator.h"
 
 DECLES_BEGIN
 
 struct _Module;
 typedef struct _Module Module;
 
-Module* module_create(const char* name, const char* arguments, const char* lib_path, void* ctx);
+Module* module_create(const char* name, const char* arguments, const char* lib_path, Allocator* alloc, void* ctx);
 
 Ret module_init(Module* thiz, void* ctx);
 Ret module_start(Module* thiz, void* ctx);

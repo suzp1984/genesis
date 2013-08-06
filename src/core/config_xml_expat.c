@@ -148,7 +148,7 @@ static Ret config_xml_expat_get_module_name_by_id(Config* thiz, size_t index, ch
 {
     DECLES_PRIV(priv, thiz);
     
-    return dlist_get_by_index(priv->modules_name, index, module);
+    return dlist_get_by_index(priv->modules_name, index, (void**)module);
 }
 
 static Ret config_xml_expat_get_module_lib_path(Config* thiz, char** path)
