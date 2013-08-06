@@ -74,7 +74,7 @@ static Ret module__load(Module* thiz, const char* name)
     thiz->handler = handler;
 
     const char* sym = MODULE_SYM_INFO_AS_STR;
-    info = (struct ModuleInfo*)dlsym(handle, sym);
+    info = (struct ModuleInfo*)dlsym(handler, sym);
     if (info == NULL) {
         return RET_FAIL;
     }

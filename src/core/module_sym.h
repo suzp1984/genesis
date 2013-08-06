@@ -43,7 +43,7 @@ typedef Ret (*ModuleInitFunc)(Module* thiz, void* ctx);
 typedef Ret (*ModuleStartFunc)(Module* thiz, void* ctx);
 typedef Ret (*ModuleDoneFunc)(Module* thiz, void* ctx);
 
-typedef ModuleInfo
+struct ModuleInfo
 {
     const char* author;
     const char* version;

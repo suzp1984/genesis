@@ -1,7 +1,7 @@
 /*
- * File:    modules_manager.h
+ * File:    test_modules_manager.cpp
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   Modules management header
+ * Brief:   modules_manager test case
  *
  * Copyright (c) zxsu
  *
@@ -25,31 +25,20 @@
 /*
  * History:
  * ================================================================
- * 2013-07-31 22:46 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-06 10:14 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _MODULES_MANAGER_H
-#define _MODULES_MANAGER_H
+#include <gtest/gtest.h>
 
-#include "typedef.h"
-#include "module.h"
-#include "allocator.h"
+#include "modules_manager.h"
+#include "allocator_nginx.h"
 
-DECLES_BEGIN
+TEST(ModulesManagerTest, simple_test) {
+    Allocator* alloc = allocator_nginx_create(128);
+    ModulesManager* manager = modules_manager_create(alloc);
+    
+    ASSERT_EQ(0, modules_manager_get_count(manager));
 
-struct _ModulesManager;
-typedef struct _ModulesManager ModulesManager;
-
-ModulesManager* modules_manager_create(Allocator* alloc);
-
-Ret modules_manager_load(ModulesManager* thiz, const char* module, void* ctx);
-Ret modules_manager_unload(ModulesManager* thiz, const char* module);
-int modules_manager_get_count(ModulesManager* thiz);
-Ret modules_manager_get_by_name(ModulesManager* thiz, const char* name, Module** module);
-Ret modules_manager_get_by_index(ModulesManager* thiz, size_t index, Module** module);
-
-void modules_manager_destroy(ModulesManager* thiz);
-
-DECLES_END
-
-#endif /* _MODULES_MANAGER_H */
+    modules_manager_destroy(manager);
+    allocator_destroy(alloc);
+}

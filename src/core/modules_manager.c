@@ -39,13 +39,98 @@ struct _ModulesManager {
 
 ModulesManager* modules_manager_create(Allocator* alloc)
 {
-    return_val_if_fail(alloc != NULL, NULL);
-
     ModulesManager* thiz = (ModulesManager*)allocator_alloc(alloc, sizeof(ModulesManager));
 
     if (thiz != NULL) {
         thiz->alloc = alloc;
+        thiz->modules = dlist_create(NULL, NULL, NULL, NULL);
     }
 
     return thiz;
+}
+
+Ret modules_manager_load(ModulesManager* thiz, const char* module, void* ctx)
+{
+    return_val_if_fail(thiz != NULL && module != NULL, RET_INVALID_PARAMS);
+
+    Ret ret = RET_FAIL;
+    Module* item = module_create(module, NULL, ctx);
+    if (item != NULL) {
+        dlist_append(thiz->modules, (void*)item);
+    }
+
+    return ret;
+}
+
+Ret modules_manager_unload(ModulesManager* thiz, const char* module)
+{
+    return_val_if_fail(thiz != NULL && module != NULL, RET_INVALID_PARAMS);
+    
+    Module* item = NULL;
+    char* item_name = NULL;
+    int count = modules_manager_get_count(thiz);
+    int i = 0;
+
+    for (i = 0; i < count; i++) {
+        dlist_get_by_index(thiz->modules, i, &item);
+        item_name = module_get_name(item);
+        if (!strcmp(module, item_name)) {
+            break;
+        }
+        item = NULL;
+        item_name = NULL;
+    }
+
+    if (item != NULL) {
+        dlist_delete(thiz->modules, i);
+        module_destroy(item);
+    }
+
+    return RET_OK;
+}
+
+int modules_manager_get_count(ModulesManager* thiz)
+{
+    return_val_if_fail(thiz != NULL && thiz->modules != NULL, 0);
+
+    return dlist_length(thiz->modules);
+}
+
+Ret modules_manager_get_by_name(ModulesManager* thiz, const char* name, Module** module)
+{
+    return_val_if_fail(thiz != NULL && name != NULL, RET_INVALID_PARAMS);
+
+    char* item_name = NULL;
+    int count = modules_manager_get_count(thiz);
+    int i = 0;
+    Ret ret = RET_FAIL;
+
+    for (i = 0; i < count; i++) {
+        dlist_get_by_index(thiz->modules, i, module);
+        item_name = module_get_name(*module);
+        if (!strcmp(name, item_name)) {
+            ret = RET_OK;
+            break;
+        }
+        module = NULL;
+        item_name = NULL;
+    }
+
+    return ret;
+}
+
+Ret modules_manager_get_by_index(ModulesManager* thiz, size_t index, Module** module)
+{
+    return_val_if_fail(thiz != NULL && index >= 0, RET_INVALID_PARAMS);
+
+    return dlist_get_by_index(thiz->modules, index, module);
+}
+
+void modules_manager_destroy(ModulesManager* thiz)
+{
+    return_if_fail(thiz != NULL);
+
+    dlist_destroy(thiz->modules);
+    allocator_destroy(thiz);
+    return;
 }

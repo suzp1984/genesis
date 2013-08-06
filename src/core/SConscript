@@ -2,7 +2,8 @@ Import('env')
 Import('utils_lib_static')
 
 genesis_lib_src = ['pipe_default.c', 'source_timer.c', 'source_primary.c',
-                   'sources_manager.c', 'main_loop_select.c']
+                   'sources_manager.c', 'main_loop_select.c',
+                   'module.c', 'modules_manager.c']
 
 genesis_lib_env = env.Clone()
 genesis_lib_shared = genesis_lib_env.SharedLibrary('genesis', genesis_lib_src, LIBS =
