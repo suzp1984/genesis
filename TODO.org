@@ -1,0 +1,3 @@
+* build the core modules first
+** select main loop module
+** poll main loop module
