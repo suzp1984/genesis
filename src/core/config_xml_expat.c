@@ -1,7 +1,7 @@
 /*
- * File:    reactor.c
+ * File:    config_xml_expat.c
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   Reactor implementation
+ * Brief:   use expat to parser xml config file
  *
  * Copyright (c) zxsu
  *
@@ -25,16 +25,17 @@
 /*
  * History:
  * ================================================================
- * 2013-07-31 22:15 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-06 11:12 zxsu <suzp1984@gmail.com> created.
  */
 
-#include "reactor.h"
+#include "config_xml_expat.h"
 
-#include "main_loop.h"
-#include "modules_manager.h"
+#include <expat.h>
 
+typedef struct {
+    XML_Parser parser;
+} PrivInfo;
 
-struct _Reactor {
-    ModulesManager* modules_manager;
-    MainLoop* main_loop;
-};
+Config* config_xml_expat_create()
+{
+}
