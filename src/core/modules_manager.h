@@ -42,7 +42,7 @@ typedef struct _ModulesManager ModulesManager;
 
 ModulesManager* modules_manager_create(Allocator* alloc);
 
-Ret modules_manager_load(ModulesManager* thiz, const char* module, void* ctx);
+Ret modules_manager_load(ModulesManager* thiz, const char* module, const char* lib_path, void* ctx);
 Ret modules_manager_unload(ModulesManager* thiz, const char* module);
 int modules_manager_get_count(ModulesManager* thiz);
 Ret modules_manager_get_by_name(ModulesManager* thiz, const char* name, Module** module);

@@ -58,14 +58,14 @@ ModulesManager* modules_manager_create(Allocator* alloc)
     return thiz;
 }
 
-Ret modules_manager_load(ModulesManager* thiz, const char* module, void* ctx)
+Ret modules_manager_load(ModulesManager* thiz, const char* module, const char* lib_path, void* ctx)
 {
     return_val_if_fail(thiz != NULL && module != NULL, RET_INVALID_PARAMS);
 
     Ret ret = RET_FAIL;
-    Module* item = module_create(module, NULL, NULL, thiz->alloc, ctx);
+    Module* item = module_create(module, NULL, lib_path, thiz->alloc, ctx);
     if (item != NULL) {
-        dlist_append(thiz->modules, (void*)item);
+        ret = dlist_append(thiz->modules, (void*)item);
     }
 
     return ret;

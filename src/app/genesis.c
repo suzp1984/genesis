@@ -29,11 +29,21 @@
  */
 
 #include "reactor.h"
+#include "allocator_nginx.h"
+#include "config_xml_expat.h"
 
 int main(int argc, char* argv[])
 {
-    Reactor* reactor = reactor_create();
+    Allocator* alloc = allocator_nginx_create(1024);
+    Config* conf = config_xml_expat_create();
+
+    Reactor* reactor = reactor_create(config, alloc);
     reactor_run(reactor);
+    
+    reactor_destroy(reactor);
+
+    config_destroy(config);
+    allocator_destroy(alloc);
 
     return 0;
 }
