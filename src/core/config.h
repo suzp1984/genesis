@@ -41,6 +41,7 @@ typedef struct _Config Config;
 typedef Ret (*ConfigLoad)(Config* thiz, const char* config_file);
 typedef size_t (*ConfigGetModulesCount)(Config* thiz);
 typedef Ret (*ConfigGetModuleNameById)(Config* thiz, size_t index, char** module);
+typedef Ret (*ConfigGetModuleLibPath)(Config* thiz, char** path);
 
 typedef void (*ConfigDestroy)(Config* thiz);
 
@@ -48,6 +49,7 @@ struct _Config {
     ConfigLoad load;
     ConfigGetModulesCount get_modules_count;
     ConfigGetModuleNameById get_module_name_by_id;
+    ConfigGetModuleLibPath get_module_lib_path;
 
     ConfigDestroy destroy;
     char* priv[1];
@@ -76,6 +78,14 @@ static inline Ret config_get_module_name_by_id(Config* thiz, size_t index, char*
                        index >= 0 &&  module != NULL, RET_INVALID_PARAMS);
 
     return thiz->get_module_name_by_id(thiz, index, module);
+}
+
+static inline Ret config_get_module_lib_path(Config* thiz, char** path)
+{
+    return_val_if_fail(thiz != NULL && thiz->get_module_lib_path != NULL &&
+                       path != NULL, RET_INVALID_PARAMS);
+
+    return thiz->get_module_lib_path(thiz, path);
 }
 
 static inline void config_destroy(Config* thiz)

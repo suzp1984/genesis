@@ -37,3 +37,6 @@ test_env.Program('test_utils', ['test_utils.cpp'], LIBS=[genesis_lib_static, uti
 
 test_env.Program('test_modules_manager', ['test_modules_manager.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread', 'dl'],
                  CPPPATH = ['#utils', '#src/core'])
+
+test_env.Program('test_config_xml_expat', ['test_config_xml_expat.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread', 'expat'],
+                 CPPPATH = ['#utils', '#src/core'])

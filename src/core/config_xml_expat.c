@@ -151,6 +151,14 @@ static Ret config_xml_expat_get_module_name_by_id(Config* thiz, size_t index, ch
     return dlist_get_by_index(priv->modules_name, index, module);
 }
 
+static Ret config_xml_expat_get_module_lib_path(Config* thiz, char** path)
+{
+    DECLES_PRIV(priv, thiz);
+    
+    *path = priv->module_path;
+    return RET_OK;
+}
+
 static void config_xml_expat_destroy(Config* thiz)
 {
     DECLES_PRIV(priv, thiz);
@@ -170,6 +178,7 @@ Config* config_xml_expat_create()
         thiz->load = config_xml_expat_load;
         thiz->get_modules_count = config_xml_expat_get_modules_count;
         thiz->get_module_name_by_id = config_xml_expat_get_module_name_by_id;
+        thiz->get_module_lib_path = config_xml_expat_get_module_lib_path;
         thiz->destroy = config_xml_expat_destroy;
 
         priv->parser = XML_ParserCreate(NULL);
