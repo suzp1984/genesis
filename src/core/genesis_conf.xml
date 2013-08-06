@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <genesis>
+  <module_path value="/usr/local/genesis/" />
   <modules>
     <item name="hello"/>
   </modules>

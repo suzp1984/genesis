@@ -32,9 +32,29 @@
 
 #include "main_loop.h"
 #include "modules_manager.h"
-
+#include "config.h"
 
 struct _Reactor {
+    Config* config;
     ModulesManager* modules_manager;
     MainLoop* main_loop;
 };
+
+Reactor* reactor_create(const char* conf_file)
+{
+}
+
+Ret reactor_run(Reactor* thiz)
+{
+    return main_loop_run(thiz->main_loop);
+}
+
+Ret reactor_stop(Reactor* thiz)
+{
+    return main_loop_quit(thiz->main_loop);
+}
+
+void reactor_destroy(Reactor* thiz)
+{
+    return;
+}

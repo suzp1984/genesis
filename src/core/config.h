@@ -40,14 +40,14 @@ typedef struct _Config Config;
 
 typedef Ret (*ConfigLoad)(Config* thiz, const char* config_file);
 typedef size_t (*ConfigGetModulesCount)(Config* thiz);
-typedef Ret (*ConfigGetModuleById)(Config* thiz, size_t index, char** module);
+typedef Ret (*ConfigGetModuleNameById)(Config* thiz, size_t index, char** module);
 
 typedef void (*ConfigDestroy)(Config* thiz);
 
 struct _Config {
     ConfigLoad load;
-    ConfigGetModulesCount get_count;
-    ConfigGetModuleById get_module_by_id;
+    ConfigGetModulesCount get_modules_count;
+    ConfigGetModuleNameById get_module_name_by_id;
 
     ConfigDestroy destroy;
     char* priv[1];
@@ -64,16 +64,18 @@ static inline Ret config_load(Config* thiz, const char* config_file)
 
 static inline size_t config_get_modules_count(Config* thiz)
 {
-    return_val_if_fail(thiz != NULL && thiz->get_count != NULl, 0);
+    return_val_if_fail(thiz != NULL && thiz->get_modules_count != NULL, 0);
 
-    return thiz->get_count(thiz);
+    return thiz->get_modules_count(thiz);
 }
 
-static inline Ret config_get_module_by_id(Config* thiz, size_t index, char** module)
+static inline Ret config_get_module_name_by_id(Config* thiz, size_t index, char** module)
 {
-    return_val_if_fail(thiz != NULL && index >= 0, RET_INVALID_PARAMS);
+    return_val_if_fail(thiz != NULL && 
+                       thiz->get_module_name_by_id != NULL &&
+                       index >= 0 &&  module != NULL, RET_INVALID_PARAMS);
 
-    return thiz->get_module_by_id(thiz, index, module);
+    return thiz->get_module_name_by_id(thiz, index, module);
 }
 
 static inline void config_destroy(Config* thiz)
