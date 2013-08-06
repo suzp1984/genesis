@@ -1,1 +1,2 @@
 SConscript('core/SConscript', duplicate=0)
+SConscript('modules/SConscript', duplicate=0)

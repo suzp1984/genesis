@@ -44,6 +44,11 @@ Reactor* reactor_create(Config* config, Allocator* alloc)
 {
     return_val_if_fail(config != NULL, NULL);
 
+    char* lib_path = NULL;
+    char* module_name = NULL;
+    size_t count = 0;
+    size_t i = 0;
+
     Reactor* thiz = (Reactor*)allocator_alloc(alloc, sizeof(Reactor));
     if (thiz != NULL) {
         thiz->alloc = alloc;
@@ -51,6 +56,14 @@ Reactor* reactor_create(Config* config, Allocator* alloc)
         thiz->modules_manager = modules_manager_create(alloc);
         thiz->main_loop = NULL;
         // then load the default modules
+        config_get_module_lib_path(config, &lib_path);
+        count = config_get_modules_count(config);
+        for (i = 0; i < count; i++) {
+            config_get_module_name_by_id(config, i, &module_name);
+            modules_manager_load(thiz->modules_manager, module_name, lib_path, NULL);
+        }
+        
+        
     }
 
     return thiz;

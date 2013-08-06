@@ -39,16 +39,23 @@ DECLES_BEGIN
 #define MODULE_SYM_INFO FMI
 #define MODULE_SYM_INFO_AS_STR "FMI"
 
+typedef enum _ModuleType {
+    MODULE_CORE_TYPE = 0,
+    MODULE_NORMAL_TYPE
+} ModuleType;
+
 typedef Ret (*ModuleInitFunc)(Module* thiz, void* ctx);
 typedef Ret (*ModuleStartFunc)(Module* thiz, void* ctx);
 typedef Ret (*ModuleDoneFunc)(Module* thiz, void* ctx);
 
 struct ModuleInfo
 {
+    const char* module_name;
     const char* author;
     const char* version;
     const char* description;
     const char* usage;
+    ModuleType  type;
 
     ModuleInitFunc init;
     ModuleStartFunc start;
