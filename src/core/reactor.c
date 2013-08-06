@@ -32,16 +32,28 @@
 
 #include "main_loop.h"
 #include "modules_manager.h"
-#include "config.h"
 
 struct _Reactor {
+    Allocator* alloc;
     Config* config;
     ModulesManager* modules_manager;
     MainLoop* main_loop;
 };
 
-Reactor* reactor_create(const char* conf_file)
+Reactor* reactor_create(Config* config, Allocator* alloc)
 {
+    return_val_if_fail(config != NULL, NULL);
+
+    Reactor* thiz = (Reactor*)allocator_alloc(alloc, sizeof(Reactor));
+    if (thiz != NULL) {
+        thiz->alloc = alloc;
+        thiz->config = config;
+        thiz->modules_manager = modules_manager_create(alloc);
+        thiz->main_loop = NULL;
+        // then load the default modules
+    }
+
+    return thiz;
 }
 
 Ret reactor_run(Reactor* thiz)
@@ -56,5 +68,9 @@ Ret reactor_stop(Reactor* thiz)
 
 void reactor_destroy(Reactor* thiz)
 {
+    return_if_fail(thiz != NULL);
+
+    modules_manager_destroy(thiz->modules_manager);
+
     return;
 }

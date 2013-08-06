@@ -47,6 +47,7 @@ struct _Module
     struct ModuleInfo* info;
     void* ctx;
     void* handler;
+    char* lib_path;
 };
 
 static Ret module__load(Module* thiz, const char* name)
@@ -57,7 +58,12 @@ static Ret module__load(Module* thiz, const char* name)
     void* handler;
     struct ModuleInfo* info;
 
-    snprintf(path, sizeof(path), "%s/lib%s.so", MODULE_PATH, name);
+    // first try lib_path, then ./, then ~/.genesis/modules/
+    snprintf(path, sizeof(path), "%s/lib%s.so", thiz->lib_path, name);
+    if (access(path, R_OK) != 0) {
+        snprintf(path, sizeof(path), "%s/lib%s.so", MODULE_PATH, name);    
+    }
+    
     if (access(path, R_OK) != 0) {
         snprintf(path, sizeof(path), "%s/lib%s.so", MODULE_PATH2, name);
     }
@@ -83,7 +89,7 @@ static Ret module__load(Module* thiz, const char* name)
     return RET_OK;
 }
 
-Module* module_create(const char* name, const char* arguments, void* ctx)
+Module* module_create(const char* name, const char* arguments, const char* lib_path, void* ctx)
 {
     return_val_if_fail(name != NULL, NULL);
 
@@ -92,6 +98,10 @@ Module* module_create(const char* name, const char* arguments, void* ctx)
     if (thiz != NULL) {
         thiz->ctx = ctx;
         thiz->name = strdup(name);
+        if (lib_path == NULL) {
+            lib_path = MODULE_PATH;
+        }
+        thiz->lib_path = strdup(lib_path);
         if (arguments) {
             thiz->argument = strdup(arguments);
         }
@@ -148,11 +158,13 @@ Ret module_set_name(Module* thiz, const char* name)
     return RET_OK;
 }
 
-const char* module_get_name(Module* thiz)
+Ret module_get_name(Module* thiz, char** name)
 {
-    return_val_if_fail(thiz != NULL, NULL);
+    return_val_if_fail(thiz != NULL && name != NULL, RET_INVALID_PARAMS);
 
-    return thiz->name;
+    *name = thiz->name;
+
+    return RET_OK;
 }
 
 void module_destroy(Module* thiz)
@@ -165,6 +177,7 @@ void module_destroy(Module* thiz)
     }
 
     SAFE_FREE(thiz->name);
+    SAFE_FREE(thiz->lib_path);    
     SAFE_FREE(thiz->argument);
     SAFE_FREE(thiz);
 }

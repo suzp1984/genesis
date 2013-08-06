@@ -1,7 +1,7 @@
 /*
- * File:    module.h<2>
+ * File:    genesis.c
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   module header
+ * Brief:   the main function of genesis
  *
  * Copyright (c) zxsu
  *
@@ -25,30 +25,15 @@
 /*
  * History:
  * ================================================================
- * 2013-07-29 16:52 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-06 17:16 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _MODULE_H
-#define _MODULE_H
+#include "reactor.h"
 
-#include "typedef.h"
+int main(int argc, char* argv[])
+{
+    Reactor* reactor = reactor_create();
+    reactor_run(reactor);
 
-DECLES_BEGIN
-
-struct _Module;
-typedef struct _Module Module;
-
-Module* module_create(const char* name, const char* arguments, const char* lib_path, void* ctx);
-
-Ret module_init(Module* thiz, void* ctx);
-Ret module_start(Module* thiz, void* ctx);
-Ret module_done(Module* thiz, void* ctx);
-
-Ret module_set_name(Module* thiz, const char* name);
-Ret module_get_name(Module* thiz, char** name);
-
-void module_destroy(Module* thiz);
-
-DECLES_END
-
-#endif /* _MODULE_H */
+    return 0;
+}

@@ -37,13 +37,22 @@ struct _ModulesManager {
     Allocator* alloc;
 };
 
+static void _module_node_destroy(void* ctx, void* data)
+{
+    Module* module = (Module*)data;
+    
+    module_destroy(module);
+
+    return;
+}
+
 ModulesManager* modules_manager_create(Allocator* alloc)
 {
     ModulesManager* thiz = (ModulesManager*)allocator_alloc(alloc, sizeof(ModulesManager));
 
     if (thiz != NULL) {
         thiz->alloc = alloc;
-        thiz->modules = dlist_create(NULL, NULL, NULL, NULL);
+        thiz->modules = dlist_create(_module_node_destroy, NULL, NULL, NULL);
     }
 
     return thiz;
@@ -54,7 +63,7 @@ Ret modules_manager_load(ModulesManager* thiz, const char* module, void* ctx)
     return_val_if_fail(thiz != NULL && module != NULL, RET_INVALID_PARAMS);
 
     Ret ret = RET_FAIL;
-    Module* item = module_create(module, NULL, ctx);
+    Module* item = module_create(module, NULL, NULL, ctx);
     if (item != NULL) {
         dlist_append(thiz->modules, (void*)item);
     }
@@ -72,8 +81,8 @@ Ret modules_manager_unload(ModulesManager* thiz, const char* module)
     int i = 0;
 
     for (i = 0; i < count; i++) {
-        dlist_get_by_index(thiz->modules, i, &item);
-        item_name = module_get_name(item);
+        dlist_get_by_index(thiz->modules, i, (void**)&item);
+        module_get_name(item, &item_name);
         if (!strcmp(module, item_name)) {
             break;
         }
@@ -83,7 +92,7 @@ Ret modules_manager_unload(ModulesManager* thiz, const char* module)
 
     if (item != NULL) {
         dlist_delete(thiz->modules, i);
-        module_destroy(item);
+        //module_destroy(item);
     }
 
     return RET_OK;
@@ -106,8 +115,8 @@ Ret modules_manager_get_by_name(ModulesManager* thiz, const char* name, Module**
     Ret ret = RET_FAIL;
 
     for (i = 0; i < count; i++) {
-        dlist_get_by_index(thiz->modules, i, module);
-        item_name = module_get_name(*module);
+        dlist_get_by_index(thiz->modules, i, (void**)module);
+        module_get_name(*module, &item_name);
         if (!strcmp(name, item_name)) {
             ret = RET_OK;
             break;
@@ -123,7 +132,7 @@ Ret modules_manager_get_by_index(ModulesManager* thiz, size_t index, Module** mo
 {
     return_val_if_fail(thiz != NULL && index >= 0, RET_INVALID_PARAMS);
 
-    return dlist_get_by_index(thiz->modules, index, module);
+    return dlist_get_by_index(thiz->modules, index, (void**)module);
 }
 
 void modules_manager_destroy(ModulesManager* thiz)
@@ -131,6 +140,6 @@ void modules_manager_destroy(ModulesManager* thiz)
     return_if_fail(thiz != NULL);
 
     dlist_destroy(thiz->modules);
-    allocator_destroy(thiz);
+    allocator_free(thiz->alloc, thiz);
     return;
 }

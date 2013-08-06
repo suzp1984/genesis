@@ -32,6 +32,8 @@
 #define _REACTOR_H
 
 #include "typedef.h"
+#include "config.h"
+#include "allocator.h"
 
 DECLES_BEGIN
 
@@ -40,7 +42,7 @@ typedef Ret (*TimerHandler)(void* ctx);
 struct _Reactor;
 typedef struct _Reactor Reactor;
 
-Reactor* reactor_create(const char* conf_file);
+Reactor* reactor_create(Config* config, Allocator* alloc);
 
 Ret reactor_call_later(Reactor* thiz, int interval, TimerHandler handler, void* ctx);
 Ret reactor_run(Reactor* thiz);
