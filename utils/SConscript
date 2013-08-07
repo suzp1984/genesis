@@ -4,7 +4,7 @@ utils_lib_sources = ['allocator_nginx.c', 'locker_pthread.c',
                      'dlist.c', 'allocator_default.c',
                      'locker_nest.c', 'darray.c', 'linear_container_darray.c', 'linear_container_dlist.c',
                      'hash_table.c', 'stack.c', 'queue.c',
-                     'gs_string.c']
+                     'gs_string.c', 'logger_default.c']
 #print utils_lib_sources
 
 utils_lib_env = env.Clone()

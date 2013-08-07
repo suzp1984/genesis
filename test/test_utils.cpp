@@ -32,6 +32,7 @@
 
 #include "gs_string.h"
 #include "allocator_nginx.h"
+#include "logger_default.h"
 
 TEST(UTILSTEST, gs_string_test) {
     Allocator* alloc = allocator_nginx_create(128);
@@ -41,4 +42,16 @@ TEST(UTILSTEST, gs_string_test) {
     ASSERT_EQ(3, gs_string_len(str));
     gs_string_destroy(str);
     allocator_destroy(alloc);
+}
+
+TEST(UTILSTEST, logger_default_test) {
+    Logger* logger = logger_default_create();
+    logger_set_level(logger, LOGGER_WARNING);
+    logger_verbose(logger, "hello world %s", __func__);
+    logger_info(logger, "hello world %s", __func__);
+    logger_debug(logger, "hello world %s", __func__);
+    logger_warning(logger, "hello world %s", __func__);
+    logger_error(logger, "hello world %s", __func__);
+
+    logger_destroy(logger);
 }
