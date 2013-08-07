@@ -1,3 +1,5 @@
-* build the core modules first
-** select main loop module
-** poll main loop module
+* TODO build the core modules first
+** TODO select main loop module
+** TODO poll main loop module
+
+* TODO Add signal handler into reactor
