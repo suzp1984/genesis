@@ -10,3 +10,4 @@
   CLOSED: [2013-08-13 Tue 23:15]
 
 * TODO debugs: main_loop_add_source did works in genesis.c
+* TODO blog plan: why plugin design using dlopen lead to detriment of classes.
