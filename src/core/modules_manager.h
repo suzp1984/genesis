@@ -34,13 +34,14 @@
 #include "typedef.h"
 #include "module.h"
 #include "allocator.h"
+#include "logger.h"
 
 DECLES_BEGIN
 
 struct _ModulesManager;
 typedef struct _ModulesManager ModulesManager;
 
-ModulesManager* modules_manager_create(Allocator* alloc);
+ModulesManager* modules_manager_create(Allocator* alloc, Logger* logger);
 
 Ret modules_manager_load(ModulesManager* thiz, const char* module, const char* lib_path, void* ctx);
 Ret modules_manager_unload(ModulesManager* thiz, const char* module);

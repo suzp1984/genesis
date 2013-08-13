@@ -42,11 +42,13 @@ static Ret select_loop_module_init(Module* thiz, void* ctx)
 {
     Reactor* reactor = (Reactor*)ctx;
     if (reactor->sources_manager == NULL) {
-         reactor->sources_manager = sources_manager_create();
+        logger_error(reactor->logger, "%s: sources_manager is NULL", __func__);
+        return RET_FAIL;
     }
 
     MainLoop* select = main_loop_select_create(reactor->sources_manager);
-    reactor_set_main_loop(reactor, select);
+    //reactor_set_main_loop(reactor, select);
+    reactor->main_loop = select;
 
     return RET_OK;
 }

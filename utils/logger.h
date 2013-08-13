@@ -66,7 +66,7 @@ struct _Logger {
    LoggerDestroy destroy;
    int logger_level;
 
-   char priv[0];
+   char priv[1];
 };
 
 static inline void logger_set_level(Logger* thiz, int level)

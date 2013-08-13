@@ -49,6 +49,7 @@ struct _Module
     void* handler;
     char* lib_path;
     Allocator* alloc;
+    Logger* logger;
 };
 
 static Ret module__load(Module* thiz, const char* name)
@@ -70,11 +71,13 @@ static Ret module__load(Module* thiz, const char* name)
     }
 
     if (access(path, R_OK) != 0) {
+        logger_error(thiz->logger, "%s: access path %s fail", __func__, path);
         return RET_FAIL;
     }
 
-    handler = dlopen(path, RTLD_NOW);
+    handler = dlopen(path, RTLD_LAZY);
     if (handler == NULL) {
+        logger_error(thiz->logger, "%s: dlopen %s return NULL", __func__, path);
         return RET_FAIL;
     }
 
@@ -83,6 +86,7 @@ static Ret module__load(Module* thiz, const char* name)
     const char* sym = MODULE_SYM_INFO_AS_STR;
     info = (struct ModuleInfo*)dlsym(handler, sym);
     if (info == NULL) {
+        logger_error("%s: can not find symble = %s", __func__, sym);
         return RET_FAIL;
     }
 
@@ -90,13 +94,14 @@ static Ret module__load(Module* thiz, const char* name)
     return RET_OK;
 }
 
-Module* module_create(const char* name, const char* arguments, const char* lib_path, Allocator* alloc, void* ctx)
+Module* module_create(const char* name, const char* arguments, const char* lib_path, Allocator* alloc, Logger* logger, void* ctx)
 {
     return_val_if_fail(name != NULL, NULL);
 
     Module* thiz = (Module*)allocator_alloc(alloc, sizeof(Module));
 
     if (thiz != NULL) {
+        thiz->logger = logger;
         thiz->ctx = ctx;
         thiz->name = strdup(name);
         thiz->alloc = alloc;
@@ -109,6 +114,7 @@ Module* module_create(const char* name, const char* arguments, const char* lib_p
         }
 
         if (module__load(thiz, name) != RET_OK) {
+            logger_error(thiz->logger, "%s: module__load fail", __func__);
             module_destroy(thiz);
             return NULL;
         }

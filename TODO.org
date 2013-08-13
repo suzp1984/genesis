@@ -4,3 +4,4 @@
 ** TODO poll main loop module
 
 * TODO Add signal handler into reactor
+* TODO dlopen debugs -- how import external symbols

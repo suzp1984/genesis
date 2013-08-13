@@ -1,7 +1,7 @@
 /*
- * File:    module.h<2>
+ * File:    module_hello_world.c
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   module header
+ * Brief:   hello world modules
  *
  * Copyright (c) zxsu
  *
@@ -25,32 +25,16 @@
 /*
  * History:
  * ================================================================
- * 2013-07-29 16:52 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-13 21:49 zxsu <suzp1984@gmail.com> created.
  */
 
-#ifndef _MODULE_H
-#define _MODULE_H
+#include "module_sym.h"
 
-#include "typedef.h"
-#include "allocator.h"
-#include "logger.h"
+#define HELLO_WORLD_MODULE_NAME "hello_world"
+#define HELLO_WORLD_MODULE_AUTHOR "zxsu <suzp1984@gmail.com>"
+#define HELLO_WORLD_MODULE_VERSION "0.1"
+#define HELLO_WORLD_MODULE_DESCRIPTION "hello world module"
+#define HELLO_WORLD_MODULE_USAGE "usage: none"
 
-DECLES_BEGIN
-
-struct _Module;
-typedef struct _Module Module;
-
-Module* module_create(const char* name, const char* arguments, const char* lib_path, Allocator* alloc, Logger* logger, void* ctx);
-
-Ret module_init(Module* thiz, void* ctx);
-Ret module_start(Module* thiz, void* ctx);
-Ret module_done(Module* thiz, void* ctx);
-
-Ret module_set_name(Module* thiz, const char* name);
-Ret module_get_name(Module* thiz, char** name);
-
-void module_destroy(Module* thiz);
-
-DECLES_END
-
-#endif /* _MODULE_H */
+const struct ModuleInfo MODULE_SYM_INFO = {
+};

@@ -36,10 +36,12 @@
 #include "main_loop.h"
 #include "modules_manager.h"
 #include "sources_manager.h"
+#include "logger.h"
 
 DECLES_BEGIN
 
 struct _Reactor {
+    Logger* logger;
     Allocator* alloc;
     Config* config;
     SourcesManager* sources_manager;

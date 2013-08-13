@@ -55,3 +55,13 @@ TEST(UTILSTEST, logger_default_test) {
 
     logger_destroy(logger);
 }
+
+TEST(LoggerTest, simpletest) {
+    Logger* logger = logger_default_create();
+    
+    logger_info(logger, "hello world!");
+    logger_verbose(logger, "nice talk!");
+
+    logger_destroy(logger);
+}
+

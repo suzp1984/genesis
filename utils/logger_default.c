@@ -90,11 +90,12 @@ static void logger_default_error(Logger* thiz, const char* format, va_list ap)
 
 static void logger_default_destroy(Logger* thiz)
 {
-    if (thiz != NULL) {
+/*    if (thiz != NULL) {
         free(thiz);
     }
 
-    thiz = NULL;
+    thiz = NULL; */
+    SAFE_FREE(thiz);
 }
 
 Logger* logger_default_create()

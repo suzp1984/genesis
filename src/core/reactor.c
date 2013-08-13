@@ -30,6 +30,7 @@
 
 #include "reactor.h"
 #include "reactor-internal.h"
+#include "logger_default.h"
 
 /* 
 struct _Reactor {
@@ -52,15 +53,21 @@ Reactor* reactor_create(Config* config, Allocator* alloc)
     Reactor* thiz = (Reactor*)allocator_alloc(alloc, sizeof(Reactor));
     if (thiz != NULL) {
         Module* module = NULL;
+        thiz->logger = logger_default_create();
         thiz->alloc = alloc;
         thiz->config = config;
-        thiz->modules_manager = modules_manager_create(alloc);
+        thiz->sources_manager = sources_manager_create();
+        thiz->modules_manager = modules_manager_create(alloc, thiz->logger);
         thiz->main_loop = NULL;
         // then load the default modules
         config_get_module_lib_path(config, &lib_path);
+        logger_debug(thiz->logger, "%s: lib_path = %s", __func__, lib_path);
         count = config_get_modules_count(config);
+        logger_debug(thiz->logger, "%s: moudles count = %d", __func__, count);
         for (i = 0; i < count; i++) {
             config_get_module_name_by_id(config, i, &module_name);
+
+            logger_debug(thiz->logger, "%s: load moudule's name = %s", __func__, module_name);
             modules_manager_load(thiz->modules_manager, module_name, lib_path, thiz);
         }
         
@@ -77,6 +84,8 @@ Reactor* reactor_create(Config* config, Allocator* alloc)
 
 Ret reactor_run(Reactor* thiz)
 {
+    logger_info(thiz->logger, "%s", __func__);
+
     return main_loop_run(thiz->main_loop);
 }
 
@@ -88,9 +97,11 @@ Ret reactor_stop(Reactor* thiz)
 void reactor_destroy(Reactor* thiz)
 {
     return_if_fail(thiz != NULL);
+    logger_info(thiz->logger, "%s", __func__);
 
     sources_manager_destroy(thiz->sources_manager);
     modules_manager_destroy(thiz->modules_manager);
+    logger_destroy(thiz->logger);
     allocator_free(thiz->alloc, thiz);
 
     return;
@@ -119,10 +130,16 @@ Ret reactor_set_main_loop(Reactor* thiz, MainLoop* main_loop)
 
 Ret reactor_get_modules_manager(Reactor* thiz, ModulesManager** modules_manager)
 {
+    return_val_if_fail(thiz != NULL && modules_manager != NULL, RET_INVALID_PARAMS);
+
+    modules_manager = &(thiz->modules_manager);
     return RET_OK;
 }
 
 Ret reactor_set_modules_manager(Reactor* thiz, ModulesManager* modules_manager)
 {
+    return_val_if_fail(thiz != NULL && modules_manager != NULL, RET_INVALID_PARAMS);
+
+    thiz->modules_manager = modules_manager;
     return RET_OK;
 }

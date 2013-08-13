@@ -35,7 +35,7 @@
 
 TEST(ModulesManagerTest, simple_test) {
     Allocator* alloc = allocator_nginx_create(128);
-    ModulesManager* manager = modules_manager_create(alloc);
+    ModulesManager* manager = modules_manager_create(alloc, NULL);
     
     ASSERT_EQ(0, modules_manager_get_count(manager));
 

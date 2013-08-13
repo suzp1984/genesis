@@ -35,6 +35,7 @@
 struct _ModulesManager {
     DList* modules;
     Allocator* alloc;
+    Logger* logger;
 };
 
 static void _module_node_destroy(void* ctx, void* data)
@@ -46,13 +47,15 @@ static void _module_node_destroy(void* ctx, void* data)
     return;
 }
 
-ModulesManager* modules_manager_create(Allocator* alloc)
+ModulesManager* modules_manager_create(Allocator* alloc, Logger* logger)
 {
     ModulesManager* thiz = (ModulesManager*)allocator_alloc(alloc, sizeof(ModulesManager));
 
     if (thiz != NULL) {
         thiz->alloc = alloc;
         thiz->modules = dlist_create(_module_node_destroy, NULL, NULL, NULL);
+        thiz->logger = logger;
+        logger_info(thiz->logger, "%s", __func__);
     }
 
     return thiz;
@@ -63,9 +66,11 @@ Ret modules_manager_load(ModulesManager* thiz, const char* module, const char* l
     return_val_if_fail(thiz != NULL && module != NULL, RET_INVALID_PARAMS);
 
     Ret ret = RET_FAIL;
-    Module* item = module_create(module, NULL, lib_path, thiz->alloc, ctx);
+    Module* item = module_create(module, NULL, lib_path, thiz->alloc, thiz->logger, ctx);
     if (item != NULL) {
         ret = dlist_append(thiz->modules, (void*)item);
+    } else {
+        logger_warning(thiz->logger, "%s: can not load module = %s", __func__, module);
     }
 
     return ret;
@@ -139,6 +144,7 @@ void modules_manager_destroy(ModulesManager* thiz)
 {
     return_if_fail(thiz != NULL);
 
+    //logger_destroy(thiz->logger);
     dlist_destroy(thiz->modules);
     allocator_free(thiz->alloc, thiz);
     return;
