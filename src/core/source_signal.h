@@ -1,7 +1,7 @@
 /*
- * File:    genesis.c
+ * File:    source_signal.h
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   the main function of genesis
+ * Brief:   source signal
  *
  * Copyright (c) zxsu
  *
@@ -25,26 +25,21 @@
 /*
  * History:
  * ================================================================
- * 2013-08-06 17:16 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-08 22:55 zxsu <suzp1984@gmail.com> created.
  */
 
-#include "reactor.h"
-#include "allocator_nginx.h"
-#include "config_xml_expat.h"
+#ifndef _SOURCE_SIGNAL_H
+#define _SOURCE_SIGNAL_H
 
-int main(int argc, char* argv[])
-{
-    Allocator* alloc = allocator_nginx_create(1024);
-    Config* config = config_xml_expat_create();
-    
-    config_load(config, "../../../src/app/genesis-config.xml");
-    Reactor* reactor = reactor_create(config, alloc);
-    reactor_run(reactor);
-    
-    reactor_destroy(reactor);
+#include "source.h"
 
-    config_destroy(config);
-    allocator_destroy(alloc);
+DECLES_BEGIN
 
-    return 0;
-}
+typedef void (*SignalHandler)(int signum, void* ctx);
+
+Source* source_signal_create(int signum, SignalHandler handler, const struct timeval* tv, void* ctx);
+
+DECLES_END
+
+#endif /* _SOURCE_SIGNAL_H */
+

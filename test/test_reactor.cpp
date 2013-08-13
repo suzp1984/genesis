@@ -1,7 +1,7 @@
 /*
- * File:    genesis.c
+ * File:    test_reactor.cpp
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   the main function of genesis
+ * Brief:   reactor's test case
  *
  * Copyright (c) zxsu
  *
@@ -25,26 +25,19 @@
 /*
  * History:
  * ================================================================
- * 2013-08-06 17:16 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-13 10:30 zxsu <suzp1984@gmail.com> created.
  */
 
+#include <gtest/gtest.h>
+
 #include "reactor.h"
-#include "allocator_nginx.h"
 #include "config_xml_expat.h"
 
-int main(int argc, char* argv[])
-{
-    Allocator* alloc = allocator_nginx_create(1024);
+TEST(ReactorTest, simpletest) {
     Config* config = config_xml_expat_create();
-    
-    config_load(config, "../../../src/app/genesis-config.xml");
-    Reactor* reactor = reactor_create(config, alloc);
-    reactor_run(reactor);
-    
+    Reactor* reactor = reactor_create(config, NULL);
+
+    ASSERT_EQ(true, (reactor != NULL));
     reactor_destroy(reactor);
-
     config_destroy(config);
-    allocator_destroy(alloc);
-
-    return 0;
 }

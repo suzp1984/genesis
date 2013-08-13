@@ -1,0 +1,8 @@
+Import('env')
+Import('utils_lib_static')
+Import('genesis_lib_static')
+
+
+genesis_env = env.Clone()
+genesis_env.Program('genesis', ['genesis.c'], LIBS=[genesis_lib_static, utils_lib_static, 'expat', 'dl'],
+                    CPPPATH=['#utils', '#src/core'])

@@ -1,7 +1,7 @@
 /*
- * File:    genesis.c
+ * File:    reactor-internal.h
  * Author:  zxsu <suzp1984@gmail.com>
- * Brief:   the main function of genesis
+ * Brief:   internal implementation of reactor
  *
  * Copyright (c) zxsu
  *
@@ -25,26 +25,35 @@
 /*
  * History:
  * ================================================================
- * 2013-08-06 17:16 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-13 10:22 zxsu <suzp1984@gmail.com> created.
  */
 
+#ifndef _REACTOR_INTERNAL_H
+#define _REACTOR_INTERNAL_H
+
+#include "typedef.h"
 #include "reactor.h"
-#include "allocator_nginx.h"
-#include "config_xml_expat.h"
+#include "main_loop.h"
+#include "modules_manager.h"
+#include "sources_manager.h"
 
-int main(int argc, char* argv[])
-{
-    Allocator* alloc = allocator_nginx_create(1024);
-    Config* config = config_xml_expat_create();
-    
-    config_load(config, "../../../src/app/genesis-config.xml");
-    Reactor* reactor = reactor_create(config, alloc);
-    reactor_run(reactor);
-    
-    reactor_destroy(reactor);
+DECLES_BEGIN
 
-    config_destroy(config);
-    allocator_destroy(alloc);
+struct _Reactor {
+    Allocator* alloc;
+    Config* config;
+    SourcesManager* sources_manager;
+    ModulesManager* modules_manager;
+    MainLoop* main_loop;
+};
 
-    return 0;
-}
+Ret reactor_get_main_loop(Reactor* thiz, MainLoop** main_loop);
+Ret reactor_set_main_loop(Reactor* thiz, MainLoop* main_loop);
+
+Ret reactor_get_modules_manager(Reactor* thiz, ModulesManager** modules_manager);
+Ret reactor_set_modules_manager(Reactor* thiz, ModulesManager* modules_manager);
+
+DECLES_END
+
+#endif /* _REACTOR_NTERNAL_H */
+

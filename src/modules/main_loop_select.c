@@ -36,6 +36,7 @@
 
 #include "main_loop_select.h"
 #include "event.h"
+//#include "sources_manager.h"
 //#include "source_primay
 
 typedef struct _PrivInfo {
@@ -164,13 +165,15 @@ static Ret main_loop_select_remove_source(MainLoop* thiz, Source* source)
 
 static void main_loop_select_destroy(MainLoop* thiz)
 {
+    DECLES_PRIV(priv, thiz);
+    
+//    modules_manager_destroy(priv->sources_manager);
+
     SAFE_FREE(thiz);
 }
 
 MainLoop* main_loop_select_create(SourcesManager* sources_manager)
 {
-    return_val_if_fail(sources_manager != NULL, NULL);
-
     MainLoop* thiz = (MainLoop*)malloc(sizeof(MainLoop) + sizeof(PrivInfo));
 
     if (thiz != NULL) {

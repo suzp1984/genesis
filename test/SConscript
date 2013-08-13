@@ -3,6 +3,7 @@ Import('env')
 Import('utils_lib_static')
 Import('genesis_lib_static')
 Import('select_loop_lib_static')
+Import('genesis_lib_shared')
 
 test_env = env.Clone()
 
@@ -30,7 +31,7 @@ test_env.Program('test_source', ['test_source.cpp'], LIBS=[genesis_lib_static, u
 test_env.Program('test_sources_manager', ['test_sources_manager.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
                  CPPPATH = ['#utils', '#src/core'])
 
-test_env.Program('test_main_loop', ['test_main_loop.cpp'], LIBS=[genesis_lib_static, utils_lib_static, select_loop_lib_static, 'gtest', 'gtest_main', 'pthread'],
+test_env.Program('test_main_loop', ['test_main_loop.cpp'], LIBS=[genesis_lib_static, select_loop_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread', 'expat', 'dl'],
                  CPPPATH = ['#utils', '#src/core', '#src/modules'])
 
 test_env.Program('test_utils', ['test_utils.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread'],
@@ -40,4 +41,7 @@ test_env.Program('test_modules_manager', ['test_modules_manager.cpp'], LIBS=[gen
                  CPPPATH = ['#utils', '#src/core'])
 
 test_env.Program('test_config_xml_expat', ['test_config_xml_expat.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread', 'expat'],
+                 CPPPATH = ['#utils', '#src/core'])
+
+test_env.Program('test_reactor', ['test_reactor.cpp'], LIBS=[genesis_lib_static, utils_lib_static, 'gtest', 'gtest_main', 'pthread', 'dl', 'expat'],
                  CPPPATH = ['#utils', '#src/core'])

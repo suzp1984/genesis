@@ -29,6 +29,8 @@
  */
 
 #include "module_sym.h"
+#include "reactor-internal.h"
+#include "main_loop_select.h"
 
 #define SELECT_LOOP_MODULE_NAME "select_loop"
 #define SELECT_LOOP_MODULE_AUTHOR "zxsu <suzp1984@gmail.com>"
@@ -38,6 +40,14 @@
 
 static Ret select_loop_module_init(Module* thiz, void* ctx)
 {
+    Reactor* reactor = (Reactor*)ctx;
+    if (reactor->sources_manager == NULL) {
+         reactor->sources_manager = sources_manager_create();
+    }
+
+    MainLoop* select = main_loop_select_create(reactor->sources_manager);
+    reactor_set_main_loop(reactor, select);
+
     return RET_OK;
 }
 
