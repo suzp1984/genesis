@@ -1,5 +1,6 @@
 * TODO build the core modules first
 ** TODO select main loop module
+** TODO app/genesis debugs, can not load main_loop.
 ** TODO poll main loop module
 
 * TODO Add signal handler into reactor
