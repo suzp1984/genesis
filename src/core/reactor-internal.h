@@ -55,6 +55,9 @@ Ret reactor_set_main_loop(Reactor* thiz, MainLoop* main_loop);
 Ret reactor_get_modules_manager(Reactor* thiz, ModulesManager** modules_manager);
 Ret reactor_set_modules_manager(Reactor* thiz, ModulesManager* modules_manager);
 
+Ret reactor_get_sources_manager(Reactor* thiz, SourcesManager** sources_manager);
+Ret reactor_set_sources_manager(Reactor* thiz, SourcesManager* sources_manager);
+
 DECLES_END
 
 #endif /* _REACTOR_NTERNAL_H */

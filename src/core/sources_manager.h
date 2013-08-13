@@ -33,13 +33,14 @@
 
 #include "source.h"
 #include "typedef.h"
+#include "logger.h"
 
 DECLES_BEGIN
 
 struct _SourcesManager;
 typedef struct _SourcesManager SourcesManager;
 
-SourcesManager* sources_manager_create();
+SourcesManager* sources_manager_create(Logger* logger);
 
 Ret sources_manager_add_source(SourcesManager* thiz, Source* source);
 Ret sources_manager_del_source(SourcesManager* thiz, Source* source);

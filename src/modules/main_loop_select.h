@@ -33,10 +33,11 @@
 
 #include "main_loop.h"
 #include "sources_manager.h"
+#include "logger.h"
 
 DECLES_BEGIN
 
-MainLoop* main_loop_select_create(SourcesManager* sources_manager);
+MainLoop* main_loop_select_create(SourcesManager* sources_manager, Logger* logger);
 
 DECLES_END
 

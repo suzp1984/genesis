@@ -44,6 +44,7 @@ typedef struct _PrivInfo {
     fd_set fdset;
     fd_set err_fdset;
     SourcesManager* sources_manager;
+    Logger* logger;
 } PrivInfo;
 
 static Ret main_loop_select_run(MainLoop* thiz)
@@ -55,6 +56,7 @@ static Ret main_loop_select_run(MainLoop* thiz)
     int fd = -1;
     int mfd = -1;
     int wait_time = 3600 * 3000;
+//    int wait_time = 1000;
     int source_wait_time = 0;
     int ret = 0;
     struct timeval tv = {0};
@@ -75,10 +77,13 @@ static Ret main_loop_select_run(MainLoop* thiz)
             }
 
             source_wait_time = source_check(source);
+            logger_debug(priv->logger, "%s: source_wait_time = %d", __func__, source_wait_time);
             if (source_wait_time >= 0 && source_wait_time < wait_time) {
                 wait_time = source_wait_time;
             }
         }
+        
+        logger_debug(priv->logger, "%s: wait_time = %d", __func__, wait_time);
 
         tv.tv_sec = wait_time / 1000;
         tv.tv_usec = (wait_time % 1000)*1000;
@@ -144,7 +149,8 @@ static Ret main_loop_select_add_source(MainLoop* thiz, Source* source)
 
     source->active = 1;
     source_enable(source);
-
+    
+    logger_debug(priv->logger, "%s: add sources", __func__);
     return source_queue_event(sources_manager_get_primary_source(priv->sources_manager),
                               &event);
 }
@@ -172,13 +178,14 @@ static void main_loop_select_destroy(MainLoop* thiz)
     SAFE_FREE(thiz);
 }
 
-MainLoop* main_loop_select_create(SourcesManager* sources_manager)
+MainLoop* main_loop_select_create(SourcesManager* sources_manager, Logger* logger)
 {
     MainLoop* thiz = (MainLoop*)malloc(sizeof(MainLoop) + sizeof(PrivInfo));
 
     if (thiz != NULL) {
         DECLES_PRIV(priv, thiz);
 
+        priv->logger = logger;
         thiz->run = main_loop_select_run;
         thiz->quit = main_loop_select_quit;
         thiz->add_source = main_loop_select_add_source;

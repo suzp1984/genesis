@@ -1,8 +1,10 @@
 Import('env')
 Import('utils_lib_static')
 Import('genesis_lib_static')
+Import('genesis_lib_shared')
 
-select_loop_lib_src = ['main_loop_select.c', 'module_select_loop.c']
+select_loop_lib_src = ['main_loop_select.c', 'module_select_loop.c', '#src/core/sources_manager.c',
+                       '#src/core/source_primary.c']
 
 select_loop_lib_env = env.Clone()
 select_loop_lib_shared = select_loop_lib_env.SharedLibrary('select_loop',

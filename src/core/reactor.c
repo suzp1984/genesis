@@ -56,7 +56,7 @@ Reactor* reactor_create(Config* config, Allocator* alloc)
         thiz->logger = logger_default_create();
         thiz->alloc = alloc;
         thiz->config = config;
-        thiz->sources_manager = sources_manager_create();
+        thiz->sources_manager = sources_manager_create(thiz->logger);
         thiz->modules_manager = modules_manager_create(alloc, thiz->logger);
         thiz->main_loop = NULL;
         // then load the default modules
@@ -111,7 +111,7 @@ Ret reactor_get_main_loop(Reactor* thiz, MainLoop** main_loop)
 {
     return_val_if_fail(thiz != NULL && main_loop != NULL, RET_INVALID_PARAMS);
 
-    main_loop = &(thiz->main_loop);
+    *main_loop = thiz->main_loop;
 
     return RET_OK;
 }
@@ -132,14 +132,36 @@ Ret reactor_get_modules_manager(Reactor* thiz, ModulesManager** modules_manager)
 {
     return_val_if_fail(thiz != NULL && modules_manager != NULL, RET_INVALID_PARAMS);
 
-    modules_manager = &(thiz->modules_manager);
+    *modules_manager = thiz->modules_manager;
     return RET_OK;
 }
 
 Ret reactor_set_modules_manager(Reactor* thiz, ModulesManager* modules_manager)
 {
     return_val_if_fail(thiz != NULL && modules_manager != NULL, RET_INVALID_PARAMS);
-
+    
+    if (thiz->modules_manager != NULL) {
+        return RET_FAIL;
+    }
     thiz->modules_manager = modules_manager;
+    return RET_OK;
+}
+
+Ret reactor_get_sources_manager(Reactor* thiz, SourcesManager** sources_manager)
+{
+    return_val_if_fail(thiz != NULL && sources_manager != NULL, RET_INVALID_PARAMS);
+
+    *sources_manager = thiz->sources_manager;
+    return RET_OK;
+}
+
+Ret reactor_set_sources_manager(Reactor* thiz, SourcesManager* sources_manager)
+{
+    return_val_if_fail(thiz != NULL && sources_manager != NULL, RET_INVALID_PARAMS);
+
+    if (thiz->sources_manager != NULL) {
+        return RET_FAIL;
+    }
+    thiz->sources_manager = sources_manager;
     return RET_OK;
 }

@@ -1,7 +1,12 @@
 * TODO build the core modules first
-** TODO select main loop module
-** TODO app/genesis debugs, can not load main_loop.
+** DONE select main loop module
+   CLOSED: [2013-08-13 Tue 23:16]
+** DONE app/genesis debugs, can not load main_loop.
+   CLOSED: [2013-08-13 Tue 23:16]
 ** TODO poll main loop module
 
 * TODO Add signal handler into reactor
-* TODO dlopen debugs -- how import external symbols
+* DONE dlopen debugs -- how import external symbols
+  CLOSED: [2013-08-13 Tue 23:15]
+
+* TODO debugs: main_loop_add_source did works in genesis.c

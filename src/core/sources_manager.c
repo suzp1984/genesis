@@ -34,10 +34,12 @@
 #include "source_primary.h"
 #include "dlist.h"
 
+
 struct _SourcesManager {
     int need_refresh;
     Source* primary;
     DList* sources_pool;
+    Logger* logger
 };
 
 static Ret sources_manager_on_event(void* user_data, Event* event);
@@ -78,11 +80,12 @@ static void sources_node_destroy(void* ctx, void* data)
     return;
 }
 
-SourcesManager* sources_manager_create()
+SourcesManager* sources_manager_create(Logger* logger)
 {
     SourcesManager* thiz = (SourcesManager*)malloc(sizeof(SourcesManager));
 
     if (thiz != NULL) {
+        thiz->logger = logger;
         thiz->sources_pool = dlist_create(sources_node_destroy, NULL, NULL, NULL);
         Source* primary_source = source_primary_create(sources_manager_on_event, (void*)thiz);
         thiz->primary = primary_source;

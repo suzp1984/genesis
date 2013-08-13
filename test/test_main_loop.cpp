@@ -33,6 +33,7 @@
 #include "main_loop_select.h"
 #include "sources_manager.h"
 #include "source_timer.h"
+#include "logger_default.h"
 
 static Ret test_timer(void* user_data) {
     MainLoop* main_loop = (MainLoop*)user_data;
@@ -44,8 +45,10 @@ static Ret test_timer(void* user_data) {
 }
 
 TEST(MainLoopTest, select_test) {
-    SourcesManager* sources_manager = sources_manager_create();
-    MainLoop* select_loop = main_loop_select_create(sources_manager);
+    Logger* logger = logger_default_create();
+
+    SourcesManager* sources_manager = sources_manager_create(logger);
+    MainLoop* select_loop = main_loop_select_create(sources_manager, logger);
     Source* timer_source = source_timer_create(2000, test_timer, (void*)select_loop);
 
     main_loop_add_source(select_loop, timer_source);
@@ -53,4 +56,6 @@ TEST(MainLoopTest, select_test) {
 
     main_loop_destroy(select_loop);
     sources_manager_destroy(sources_manager);
+
+    logger_destroy(logger);
 }

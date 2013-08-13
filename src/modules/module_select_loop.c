@@ -46,7 +46,7 @@ static Ret select_loop_module_init(Module* thiz, void* ctx)
         return RET_FAIL;
     }
 
-    MainLoop* select = main_loop_select_create(reactor->sources_manager);
+    MainLoop* select = main_loop_select_create(reactor->sources_manager, reactor->logger);
     //reactor_set_main_loop(reactor, select);
     reactor->main_loop = select;
 

@@ -44,7 +44,7 @@ static Ret source_timer_action(void* user_data)
 }
 
 TEST(SourcesManagerTest, testcase1) {
-    SourcesManager* sources_manager = sources_manager_create();
+    SourcesManager* sources_manager = sources_manager_create(NULL);
     Source* timer = source_timer_create(10, source_timer_action, NULL);
     
     ASSERT_EQ(1, sources_manager_get_count(sources_manager));
