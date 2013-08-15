@@ -1,0 +1,124 @@
+#+TITLE: Plugin architecture design by C
+
+* How to make a plugin architecture in C?
+
+Plugin architecture is a great design in order to making
+extensible and resilience software. The software's modules
+was loaded dynamically from the plugin modules at running
+time. In C language, this architecture can be implemented by
+dlopen which is the programming interface to dynamic linking
+loader in linux.
+
+In other words, A software is split into separated modules
+which is compiled and linked into shared libs. And the
+software can load the shared libs into memory dynamically,
+this is what I wanna [[https://github.com/suzp1984/genesis][genesis]] to be. [[https://github.com/suzp1984/genesis][genesis]] is a reactor
+architecture middleware lib that I am working on.
+
+* Problems I met 
+
+In order to make a plugin architecture, I use dlopen api to
+implement plugin modules. But I met some troubles in the
+development, the shared libs, or the modules, should not
+depended on other libs. In other words, the dlopen will 
+fail when load the libs which invoking the symbols that 
+not belong to it.
+
+So the modules should be developed independently of the 
+other parts of the source code. Include the data structure 
+in the header file is fine, but invoke the functions can
+make the dlopen fail.
+
+dlopen have two flags to control its behavior -- RTLD_LAZY,
+RTLD_NOW.  when you use the RTLD_NOW flag, dlopen just
+return a none handler when you make above mistakes, while
+when use the RTLD_LAZY flag, dlopen can return the handler,
+but it report an error named "can not find symbol" at
+running time.
+
+* How I solve this problem?
+
+Take the [[https://github.com/suzp1984/genesis][genesis]]'s [[https://github.com/suzp1984/genesis/blob/master/src/core/reactor.h][reactor]] class for example, I write another
+header file [[https://github.com/suzp1984/genesis/blob/master/src/core/reactor-internal.h][reactor-internal.h]], which export the reactor class's 
+details to outside. But this way damage the encapsulation partly.
+
+#+begin_src c  
+  // reactor.h
+  #ifndef _REACTOR_H
+  #define _REACTOR_H
+  
+  #include "typedef.h"
+  #include "config.h"
+  #include "allocator.h"
+  
+  DECLES_BEGIN
+  
+  struct _Reactor;
+  typedef struct _Reactor Reactor;
+  
+  Reactor* reactor_create(Config* config, Allocator* alloc);
+  
+  Ret reactor_run(Reactor* thiz);
+  Ret reactor_stop(Reactor* thiz);
+  
+  void reactor_destroy(Reactor* thiz);
+  
+  DECLES_END
+  
+  #endif /* _REACTOR_H */
+#+end_src
+
+#+begin_src c
+  // reactor-internal.h
+  #ifndef _REACTOR_INTERNAL_H
+  #define _REACTOR_INTERNAL_H
+  
+  #include "typedef.h"
+  #include "reactor.h"
+  #include "main_loop.h"
+  #include "modules_manager.h"
+  #include "sources_manager.h"
+  #include "logger.h"
+  
+  DECLES_BEGIN
+  
+  struct _Reactor {
+      Logger* logger;
+      Allocator* alloc;
+      Config* config;
+      SourcesManager* sources_manager;
+      ModulesManager* modules_manager;
+      MainLoop* main_loop;
+  };
+  
+  Ret reactor_get_main_loop(Reactor* thiz, MainLoop** main_loop);
+  Ret reactor_set_main_loop(Reactor* thiz, MainLoop* main_loop);
+  
+  Ret reactor_get_modules_manager(Reactor* thiz, ModulesManager** modules_manager);
+  Ret reactor_set_modules_manager(Reactor* thiz, ModulesManager* modules_manager);
+  
+  Ret reactor_get_sources_manager(Reactor* thiz, SourcesManager** sources_manager);
+  Ret reactor_set_sources_manager(Reactor* thiz, SourcesManager* sources_manager);
+  
+  DECLES_END
+  
+  #endif /* _REACTOR_NTERNAL_H */
+  
+#+end_src
+
+
+Another way to solve this problem is to linking the reactor's object 
+file into the plugin modules. It's the most efficiently way, but 
+so ugly.
+
+* Pros and Cons of plugin architecture.
+
+Here is my point, the pros of plugin architecture in C is that it
+provided the extensible architecture in software design, the
+cons of the plugin architecture is that it destroy the OOP principle.
+
+So the highly OOP style C code is not suitable to using plugin architecture,
+and plugin architecture oriented C code lack the OOP style. But one of 
+the fabulous feature of C code is that it not bound to OOP principles,
+OOP is just some thoughts in software development. So the pros .vs. cons, well...
+ 
