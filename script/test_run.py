@@ -24,11 +24,52 @@
 
 import ConfigParser
 import sys
+import os
+
+CONFIG_NAME = "config.prop"
+config_dir = os.path.dirname(os.path.abspath(__file__))
+config_file = os.path.join(config_dir,  CONFIG_NAME)
+test_bin_dir = os.path.join(os.path.dirname(config_dir), 'build/test/')
 
 config = ConfigParser.ConfigParser()
-config.read("config.prop")
+config.read(config_file)
 
 test_dir = config.get("test_case", "test_dir")
 
-print test_dir
-print sys.argv
+def is_file_has_extension(path):
+    if len(path.split('.')) > 1:
+        return True
+    else:
+        return False
+
+    
+def is_test_case(path):
+    filename = os.path.basename(path)
+    if (filename.startswith("test_") and not is_file_has_extension(filename)):
+       return True
+    else:
+       return False
+
+    
+def get_exe_file(exedir):
+    for path, subdirs, files in os.walk(exedir):
+        files.sort()
+        for name in files:
+            if is_test_case(name):
+                yield os.path.join(path, name)
+
+
+if __name__ == "__main__":
+    import subprocess
+    for file in get_exe_file(test_bin_dir):
+        print "***************"
+        print "Running test case: " + os.path.basename(file)
+        popen = subprocess.Popen(file, stdout=subprocess.PIPE, cwd=os.path.dirname(file))
+        popen.wait()
+        output = popen.stdout.read()
+        print output
+
+    
+#print test_dir
+#print sys.argv
+
