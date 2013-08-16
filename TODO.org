@@ -5,7 +5,8 @@
    CLOSED: [2013-08-13 Tue 23:16]
 ** TODO poll main loop module
 
-* TODO Add signal handler into reactor
+* DONE Add signal handler into reactor
+  CLOSED: [2013-08-17 Sat 01:03]
 * DONE dlopen debugs -- how import external symbols
   CLOSED: [2013-08-13 Tue 23:15]
 
