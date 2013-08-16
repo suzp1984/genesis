@@ -95,6 +95,7 @@ Source* source_timer_create(int interval, TimerAction action, void* user_data)
         thiz->destroy = source_timer_destroy;
 
         thiz->ref = 1;
+        thiz->source_type = SOURCE_NORMAL;
 
         priv->interval = interval;
         priv->action = action;

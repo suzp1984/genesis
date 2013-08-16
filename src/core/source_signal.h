@@ -37,7 +37,8 @@ DECLES_BEGIN
 
 typedef void (*SignalHandler)(int signum, void* ctx);
 
-Source* source_signal_create(int signum, SignalHandler handler, const struct timeval* tv, void* ctx);
+Source* source_signal_create(int signum, SignalHandler handler, void* ctx);
+int source_get_signal(Source* thiz);
 
 DECLES_END
 

@@ -26,12 +26,15 @@
  * History:
  * ================================================================
  * 2013-07-07 21:48 zxsu <suzp1984@gmail.com> created.
+ * 
  */
 
 #include <stdlib.h>
+#include <signal.h>
 
 #include "sources_manager.h"
 #include "source_primary.h"
+#include "source_signal.h"
 #include "dlist.h"
 
 
@@ -42,25 +45,67 @@ struct _SourcesManager {
     Logger* logger
 };
 
+static int signal_notice_fd = -1;
+// Sources_manager should be single instance pattern.
+// else signal sources did works rightly.
+static SourcesManager* base_sources_manager = NULL;
+
 static Ret sources_manager_on_event(void* user_data, Event* event);
 static int sources_cmp(void* ctx, void* data);
 static void sources_node_destroy(void* ctx, void* data);
+static void _signal_handler(int signum);
+
+static void _signal_handler(int signum)
+{
+    printf("%s: receive signal %d\n", __func__, signum);
+    //TODO write something into signal_notice_fd;
+    return_if_fail(base_sources_manager != NULL);
+    Event event;
+    event.type = EVT_SIGNAL;
+    event.u.signum = signum;
+
+    source_queue_event(base_sources_manager->primary, &event);
+    return;
+}
 
 static Ret sources_manager_on_event(void* user_data, Event* event)
 {
     return_val_if_fail(user_data != NULL && event != NULL, RET_INVALID_PARAMS);
     SourcesManager* manager = (SourcesManager*)user_data;
-
+    
     switch(event->type) 
     {
     case EVT_ADD_SOURCE:
     {
+        logger_debug(manager->logger, "%s: get EVT_ADD_SOURCE event", __func__);
         sources_manager_add_source(manager, (Source*)(event->u.extra));
         break;
     }
     case EVT_REMOVE_SOURCE:
     {
+        logger_debug(manager->logger, "%s: get EVT_REMOVE_SOURCE event", __func__);
         sources_manager_del_source(manager, (Source*)(event->u.extra));
+        break;
+    }
+    case EVT_SIGNAL:
+    {
+        int signum = event->u.signum;
+        logger_debug(manager->logger, "%s: get EVT_SIGNAL event with value %d", __func__, signum);
+        int count = sources_manager_get_count(manager);
+        logger_debug(manager->logger, "%s: sources count = %d", __func__, count);
+        Source* signal_source;
+        int i = 0;
+        for(i = 0; i < count; i++) {
+            signal_source = sources_manager_get(manager, i);
+            if (source_get_type(signal_source) == SOURCE_SIGNAL
+                && source_get_signal(signal_source) == signum) {
+                logger_debug(manager->logger, "%s: active an signal_source", __func__);
+                signal_source->active = 1;
+            }
+        }
+        Event event;
+        event.type = EVT_NOP;
+        source_queue_event(manager->primary, &event);
         break;
     }
     default:
@@ -82,10 +127,16 @@ static void sources_node_destroy(void* ctx, void* data)
 
 SourcesManager* sources_manager_create(Logger* logger)
 {
+    if (base_sources_manager != NULL) {
+        return base_sources_manager;
+    }
+
     SourcesManager* thiz = (SourcesManager*)malloc(sizeof(SourcesManager));
 
     if (thiz != NULL) {
         thiz->logger = logger;
+        //TODO signal_notice_fd should be inited here
+
         thiz->sources_pool = dlist_create(sources_node_destroy, NULL, NULL, NULL);
         Source* primary_source = source_primary_create(sources_manager_on_event, (void*)thiz);
         thiz->primary = primary_source;
@@ -94,6 +145,8 @@ SourcesManager* sources_manager_create(Logger* logger)
         source_ref(primary_source);
         thiz->need_refresh = 0;
     }
+// single instance 
+    base_sources_manager = thiz;
 
     return thiz;
 }
@@ -102,7 +155,17 @@ Ret sources_manager_add_source(SourcesManager* thiz, Source* source)
 {
     return_val_if_fail(thiz != NULL && source != NULL, RET_INVALID_PARAMS);
 
-    return dlist_append(thiz->sources_pool, (void*)source);
+    SourceType type = source_get_type(source);
+    int signum = 0;
+    if (type == SOURCE_NORMAL) {
+        return dlist_append(thiz->sources_pool, (void*)source);
+    } else if(type == SOURCE_SIGNAL) {
+        signum = source_get_signal(source);
+        signal(signum, _signal_handler);
+        return dlist_append(thiz->sources_pool, (void*)source);
+    }
+
+    return RET_FAIL;
 }
 
 static int sources_cmp(void* ctx, void* data)
@@ -187,5 +250,7 @@ void sources_manager_destroy(SourcesManager* thiz)
     }
 
     SAFE_FREE(thiz);
+// single instance pattern destroy
+    base_sources_manager = NULL;
     return;
 }

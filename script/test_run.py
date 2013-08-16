@@ -69,7 +69,3 @@ if __name__ == "__main__":
         output = popen.stdout.read()
         print output
 
-    
-#print test_dir
-#print sys.argv
-

@@ -49,3 +49,4 @@ TEST(SourceTest, primarytest) {
 
     source_destroy(primary);
 }
+

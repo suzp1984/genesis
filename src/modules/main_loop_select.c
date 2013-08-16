@@ -81,6 +81,13 @@ static Ret main_loop_select_run(MainLoop* thiz)
             if (source_wait_time >= 0 && source_wait_time < wait_time) {
                 wait_time = source_wait_time;
             }
+            
+            // process signal sources here;
+            // TODO add time interval into source_signal
+            if (source_get_type(source) == SOURCE_SIGNAL && source->active == 1) {
+                source_dispatch(source);
+                source->active = 0;
+            }
         }
         
         logger_debug(priv->logger, "%s: wait_time = %d", __func__, wait_time);
@@ -147,7 +154,7 @@ static Ret main_loop_select_add_source(MainLoop* thiz, Source* source)
     event_init(&event, EVT_ADD_SOURCE);
     event.u.extra = source;
 
-    source->active = 1;
+//    source->active = 1;
     source_enable(source);
     
     logger_debug(priv->logger, "%s: add sources", __func__);

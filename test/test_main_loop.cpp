@@ -30,10 +30,13 @@
 
 #include <gtest/gtest.h>
 
+#include <signal.h>
+
 #include "main_loop_select.h"
 #include "sources_manager.h"
 #include "source_timer.h"
 #include "logger_default.h"
+#include "source_signal.h"
 
 static Ret test_timer(void* user_data) {
     MainLoop* main_loop = (MainLoop*)user_data;
@@ -44,6 +47,12 @@ static Ret test_timer(void* user_data) {
     return RET_OK;
 }
 
+static void test_siganl(int signum, void* ctx) 
+{
+    MainLoop* main_loop = (MainLoop*)ctx;
+    main_loop_quit(main_loop);
+}
+
 TEST(MainLoopTest, select_test) {
     Logger* logger = logger_default_create();
 
@@ -52,6 +61,24 @@ TEST(MainLoopTest, select_test) {
     Source* timer_source = source_timer_create(2000, test_timer, (void*)select_loop);
 
     main_loop_add_source(select_loop, timer_source);
+    main_loop_run(select_loop);
+
+    main_loop_destroy(select_loop);
+    sources_manager_destroy(sources_manager);
+
+    logger_destroy(logger);
+}
+
+TEST(MainLoopTest, signal_test) {
+    Logger* logger = logger_default_create();
+
+    SourcesManager* sources_manager = sources_manager_create(logger);
+    MainLoop* select_loop = main_loop_select_create(sources_manager, logger);
+
+    Source* signal_source = source_signal_create(SIGALRM, test_siganl, select_loop);
+
+//    main_loop_add_source(select_loop, signal_source);
+    sources_manager_add_source(sources_manager, signal_source);
     main_loop_run(select_loop);
 
     main_loop_destroy(select_loop);

@@ -99,6 +99,8 @@ Source* source_primary_create(OnEvent on_event, void* userdata)
         thiz->destroy = source_primary_destroy;
 
         thiz->ref = 1;
+        thiz->source_type = SOURCE_NORMAL;
+
         priv->pipe = pipe_default_create();
         priv->on_event = on_event;
         priv->user_data = userdata;

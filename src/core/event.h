@@ -41,6 +41,7 @@ typedef enum _EventType
     EVT_NOP = 0,
     EVT_ADD_SOURCE,
     EVT_REMOVE_SOURCE,
+    EVT_SIGNAL,
 } EventType;
 
 typedef struct _Event
@@ -49,6 +50,7 @@ typedef struct _Event
 //    size_t time;
     union
     {
+        int signum;
         void* extra;
     }u;
 

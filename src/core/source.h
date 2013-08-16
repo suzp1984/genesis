@@ -38,6 +38,11 @@ DECLES_BEGIN
 struct _Source;
 typedef struct _Source Source;
 
+typedef enum {
+    SOURCE_NORMAL = 0,
+    SOURCE_SIGNAL
+} SourceType;
+
 typedef int (*SourceGetFd)(Source* thiz);
 typedef int (*SourceCheck)(Source* thiz);
 typedef Ret (*SourceDispatch)(Source* thiz);
@@ -52,6 +57,7 @@ struct _Source {
     int ref;
     int active;
     int disable;
+    int source_type;
     char priv[1];
 };
 
@@ -125,6 +131,13 @@ static inline void source_unref(Source* thiz)
     }
 
     return;
+}
+
+static inline int source_get_type(Source* thiz)
+{
+    return_if_fail(thiz != NULL);
+
+    return thiz->source_type;
 }
 
 DECLES_END
