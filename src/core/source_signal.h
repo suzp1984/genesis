@@ -26,6 +26,7 @@
  * History:
  * ================================================================
  * 2013-08-08 22:55 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-17 12:03 zxsu <suzp1984@gmail.com> add function source_get_signal.
  */
 
 #ifndef _SOURCE_SIGNAL_H

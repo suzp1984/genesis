@@ -26,6 +26,7 @@
  * History:
  * ================================================================
  * 2013-07-06 23:03 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-17 12:04 zxsu <suzp1984@gmail.com> add source type. 
  */
 
 #ifndef _SOURCE_H

@@ -26,7 +26,7 @@
  * History:
  * ================================================================
  * 2013-07-07 21:48 zxsu <suzp1984@gmail.com> created.
- * 
+ * 2013-08-17 12:05 zxsu <suzp1984@gmail.com> support signal source.
  */
 
 #include <stdlib.h>

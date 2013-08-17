@@ -26,6 +26,7 @@
  * History:
  * ================================================================
  * 2013-07-29 15:55 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-17 12:06 zxsu <suzp1984@gmail.com> add signal source test case.
  */
 
 #include <gtest/gtest.h>
