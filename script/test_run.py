@@ -20,6 +20,7 @@
 # History:
 ## =====================
 # 2013-08-15 08:58 zxsu <suzp1984@gmail.com> created.
+# 2013-08-18 23:37 zxsu <suzp1984@gmail.com> add cmd line OptionParser
 ## =====================
 
 import ConfigParser
