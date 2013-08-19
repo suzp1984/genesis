@@ -45,6 +45,7 @@ static int source_signal_get_fd(Source* thiz)
 
 static int source_signal_check(Source* thiz)
 {
+    printf("%s: return -1\n", __func__);
     return -1;
 }
 

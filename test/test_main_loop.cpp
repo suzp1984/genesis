@@ -32,6 +32,8 @@
 #include <gtest/gtest.h>
 
 #include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "main_loop_select.h"
 #include "sources_manager.h"
@@ -44,6 +46,14 @@ static Ret test_timer(void* user_data) {
     printf("%s: timer....\n", __func__);
 
     main_loop_quit(main_loop);
+
+    return RET_OK;
+}
+
+static Ret test_kill_timer(void* user_data) {
+    pid_t* pid = (pid_t*)user_data;
+    printf("%s: kill pid %d\n", __func__, *pid);
+    kill(*pid, SIGALRM);
 
     return RET_OK;
 }
@@ -71,15 +81,22 @@ TEST(MainLoopTest, select_test) {
 }
 
 TEST(MainLoopTest, signal_test) {
+    pid_t pid = getpid();
+        
     Logger* logger = logger_default_create();
+    logger_debug(logger, "pid = %d", pid);
 
     SourcesManager* sources_manager = sources_manager_create(logger);
     MainLoop* select_loop = main_loop_select_create(sources_manager, logger);
 
     Source* signal_source = source_signal_create(SIGALRM, test_siganl, select_loop);
+    Source* killtimer_source = source_timer_create(2000, test_kill_timer, (void*)&pid);
 
 //    main_loop_add_source(select_loop, signal_source);
     sources_manager_add_source(sources_manager, signal_source);
+    sources_manager_add_source(sources_manager, killtimer_source);
+    //main_loop_add_source(select_loop, killtimer_source);
+
     main_loop_run(select_loop);
 
     main_loop_destroy(select_loop);

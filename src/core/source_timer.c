@@ -26,6 +26,7 @@
  * History:
  * ================================================================
  * 2013-07-08 10:32 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-19 10:54 zxsu <suzp1984@gmail.com> thiz->disable debugs, uninitiated variable
  */
 
 #include <stdlib.h>
@@ -96,6 +97,7 @@ Source* source_timer_create(int interval, TimerAction action, void* user_data)
 
         thiz->ref = 1;
         thiz->source_type = SOURCE_NORMAL;
+        thiz->disable = 0;
 
         priv->interval = interval;
         priv->action = action;

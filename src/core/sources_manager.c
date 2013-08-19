@@ -27,6 +27,7 @@
  * ================================================================
  * 2013-07-07 21:48 zxsu <suzp1984@gmail.com> created.
  * 2013-08-17 12:05 zxsu <suzp1984@gmail.com> support signal source.
+ * 2013-08-19 10:29 zxsu <suzp1984@gmail.com> sources_manager_get refactor
  */
 
 #include <stdlib.h>
@@ -96,7 +97,7 @@ static Ret sources_manager_on_event(void* user_data, Event* event)
         Source* signal_source;
         int i = 0;
         for(i = 0; i < count; i++) {
-            signal_source = sources_manager_get(manager, i);
+            sources_manager_get(manager, i, &signal_source);
             if (source_get_type(signal_source) == SOURCE_SIGNAL
                 && source_get_signal(signal_source) == signum) {
                 logger_debug(manager->logger, "%s: active an signal_source", __func__);
@@ -197,14 +198,12 @@ int sources_manager_get_count(SourcesManager* thiz)
     return dlist_length(thiz->sources_pool);
 }
 
-Source* sources_manager_get(SourcesManager* thiz, int i)
+Ret sources_manager_get(SourcesManager* thiz, int i, Source** source)
 {
-    return_val_if_fail(thiz != NULL && i >= 0, NULL);
+    return_val_if_fail(thiz != NULL && i >= 0 && source != NULL, RET_INVALID_PARAMS);
+    logger_debug(thiz->logger, "%s: get num %d source", __func__, i);
 
-    Source* source = NULL;
-    dlist_get_by_index(thiz->sources_pool, i, (void**)&source);
-
-    return source;
+    return dlist_get_by_index(thiz->sources_pool, i, (void**)source);
 }
 
 int sources_manager_need_refresh(SourcesManager* thiz)

@@ -103,6 +103,8 @@ Pipe* pipe_default_create()
         pipe(pipes);
         priv->read_fd = pipes[0];
         priv->write_fd = pipes[1];
+        printf("%s: read_fd = %d\n", __func__, pipes[0]);
+        printf("%s: write_fd = %d\n", __func__, pipes[1]);
     }
 
     return thiz;

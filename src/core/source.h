@@ -136,7 +136,7 @@ static inline void source_unref(Source* thiz)
 
 static inline int source_get_type(Source* thiz)
 {
-    return_if_fail(thiz != NULL);
+    return_val_if_fail(thiz != NULL, -1);
 
     return thiz->source_type;
 }

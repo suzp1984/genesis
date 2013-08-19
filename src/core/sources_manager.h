@@ -26,6 +26,7 @@
  * History:
  * ================================================================
  * 2013-07-07 21:41 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-19 10:29 zxsu <suzp1984@gmail.com> sources_manager_get refactor
  */
 
 #ifndef _SOURCES_MANAGER_H
@@ -46,7 +47,7 @@ Ret sources_manager_add_source(SourcesManager* thiz, Source* source);
 Ret sources_manager_del_source(SourcesManager* thiz, Source* source);
 
 int sources_manager_get_count(SourcesManager* thiz);
-Source* sources_manager_get(SourcesManager* thiz, int i);
+Ret sources_manager_get(SourcesManager* thiz, int i, Source** source);
 
 /* Tell the main-loop break current loop and reselect */
 int sources_manager_need_refresh(SourcesManager* thiz);

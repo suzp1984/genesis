@@ -26,6 +26,7 @@
  * History:
  * ================================================================
  * 2013-07-08 15:47 zxsu <suzp1984@gmail.com> created.
+ * 2013-08-17 12:05 zxsu <suzp1984@gmail.com> support signal sources
  */
 
 #include <sys/select.h>
@@ -61,14 +62,18 @@ static Ret main_loop_select_run(MainLoop* thiz)
     int ret = 0;
     struct timeval tv = {0};
     Source* source = NULL;
+    int count = 0;
 
     priv->running = 1;
     while(priv->running) {
         FD_ZERO(&(priv->fdset));
         FD_ZERO(&(priv->err_fdset));
+        count = sources_manager_get_count(priv->sources_manager);
+        logger_debug(priv->logger, "%s: sources count = %d", __func__, count);
 
-        for (i = 0; i < sources_manager_get_count(priv->sources_manager); i++) {
-            source = sources_manager_get(priv->sources_manager, i);
+        for (i = 0; i < count; i++) {
+            source = NULL;
+            sources_manager_get(priv->sources_manager, i, &source);
             if ((fd = source_get_fd(source)) >= 0) {
                 FD_SET(fd, &(priv->fdset));
                 FD_SET(fd, &(priv->err_fdset));
@@ -101,7 +106,7 @@ static Ret main_loop_select_run(MainLoop* thiz)
             if (sources_manager_need_refresh(priv->sources_manager)) {
                 break;
             }
-            source = sources_manager_get(priv->sources_manager, i);
+            sources_manager_get(priv->sources_manager, i, &source);
 
             if (source->disable > 0) {
                 sources_manager_del_source(priv->sources_manager, source);
