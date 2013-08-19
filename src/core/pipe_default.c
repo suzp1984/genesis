@@ -28,6 +28,8 @@
  * 2013-07-11 22:58 zxsu <suzp1984@gmail.com> created.
  */
 
+#define _GNU_SOURCE
+#include <fcntl.h>
 #include <unistd.h>
 
 #include "pipe_default.h"
@@ -100,7 +102,7 @@ Pipe* pipe_default_create()
         thiz->get_write_fd = pipe_default_get_write_handle;
         thiz->destroy = pipe_default_destroy;
 
-        pipe(pipes);
+        pipe2(pipes, O_NONBLOCK);
         priv->read_fd = pipes[0];
         priv->write_fd = pipes[1];
         printf("%s: read_fd = %d\n", __func__, pipes[0]);

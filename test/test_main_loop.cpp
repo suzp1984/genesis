@@ -92,10 +92,10 @@ TEST(MainLoopTest, signal_test) {
     Source* signal_source = source_signal_create(SIGALRM, test_siganl, select_loop);
     Source* killtimer_source = source_timer_create(2000, test_kill_timer, (void*)&pid);
 
-//    main_loop_add_source(select_loop, signal_source);
-    sources_manager_add_source(sources_manager, signal_source);
-    sources_manager_add_source(sources_manager, killtimer_source);
-    //main_loop_add_source(select_loop, killtimer_source);
+    main_loop_add_source(select_loop, signal_source);
+    //sources_manager_add_source(sources_manager, signal_source);
+    //sources_manager_add_source(sources_manager, killtimer_source);
+    main_loop_add_source(select_loop, killtimer_source);
 
     main_loop_run(select_loop);
 
