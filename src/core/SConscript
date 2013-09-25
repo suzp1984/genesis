@@ -2,7 +2,7 @@ Import('env')
 Import('utils_lib_static')
 
 genesis_lib_src = ['pipe_default.c', 'source_timer.c', 'source_primary.c',
-                   'sources_manager.c', 'source_signal.c',
+                   'sources_manager.c', 'source_signal.c', 'pipe_socketpair.c',
                    'module.c', 'modules_manager.c', 'config_xml_expat.c',
                    'reactor.c']
 

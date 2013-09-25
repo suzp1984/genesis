@@ -7,6 +7,7 @@
 
 * TODO Try another signal handler made by signalfd
 * TODO debugs: main_loop_add_source did not works in genesis.c
+* TODO socketpair pipe 
 * DONE build elisp tools to generate time-line based log message.
    CLOSED: [2013-09-25 Wed 21:44]
 * DONE Add signal handler into reactor

@@ -26,12 +26,14 @@
  * History:
  * ================================================================
  * 2013-07-27 16:56 zxsu <suzp1984@gmail.com> created.
+ * 2013-09-25 22:09 zxsu <suzp1984@gmail.com> add socketpair test
  */
 
 #include <gtest/gtest.h>
 #include <string.h>
 
 #include "pipe_default.h"
+#include "pipe_socketpair.h"
 
 TEST(PipeDefaultTest, test1) {
     char buf[4] = {0};
@@ -42,4 +44,14 @@ TEST(PipeDefaultTest, test1) {
     ASSERT_EQ(0, strncmp("abc", buf, 4));
 
     pipe_destroy(pipe);
+}
+
+TEST(PipeSocketPairTest, test1) {
+    char buf[4] = {0};
+    Pipe* socketpair = pipe_socketpair_create();
+    ASSERT_EQ(4, pipe_write(socketpair, "abc", 4));
+    ASSERT_EQ(4, pipe_read(socketpair, buf, 4));
+    ASSERT_EQ(0, strncmp("abc", buf, 4));
+
+    pipe_destroy(socketpair);
 }
