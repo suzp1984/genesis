@@ -5,16 +5,18 @@
    CLOSED: [2013-08-13 Tue 23:16]
 ** TODO poll main loop module
 
+* TODO Try another signal handler made by signalfd
+* TODO debugs: main_loop_add_source did not works in genesis.c
+* DONE build elisp tools to generate time-line based log message.
+   CLOSED: [2013-09-25 Wed 21:44]
 * DONE Add signal handler into reactor
   CLOSED: [2013-08-17 Sat 01:03]
 * DONE dlopen debugs -- how import external symbols
   CLOSED: [2013-08-13 Tue 23:15]
 
-* TODO debugs: main_loop_add_source did works in genesis.c
 * DONE blog plan: why plugin design using dlopen lead to detriment of classes.
   CLOSED: [2013-08-15 Thu 09:03]
 
-* TODO build elisp tools to generate time-line based log message.
 * DONE add an autorun test tool
   CLOSED: [2013-08-15 Thu 22:31]
 
