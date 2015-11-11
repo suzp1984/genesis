@@ -1,11 +1,11 @@
-genesis
-=======
+Genesis
+-------
 
 A basic C middleware library of event-drivered framework
-with whole plugins design inspired by FTK and Pulseaudio.
+with whole plugins design inspired by [FTK](https://code.google.com/p/ftk/)
+and [Pulseaudio](http://www.freedesktop.org/wiki/Software/PulseAudio/).
 
-https://code.google.com/p/ftk/
-http://www.freedesktop.org/wiki/Software/PulseAudio/
+and also by [nginx](http://nginx.org/)
 
 
 How to Compile
